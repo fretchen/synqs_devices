@@ -1,5 +1,5 @@
 # SynQS_devices
- Labscript devices as used at [SynQS](https://www.kip.uni-heidelberg.de/synqs/).
+ [Labscript](https://groups.google.com/forum/?nomobile=true#!forum/labscriptsuite) devices as used at [SynQS](https://www.kip.uni-heidelberg.de/synqs/).
 
  Devices include:
 
