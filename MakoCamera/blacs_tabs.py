@@ -14,7 +14,6 @@
 from labscript_devices.IMAQdxCamera.blacs_tabs import IMAQdxCameraTab
 
 class MakoCameraTab(IMAQdxCameraTab):
-    
-    # override worker class
-    worker_class = 'labscript_devices.MakoCamera.blacs_workers.MakoCameraWorker'
 
+    # override worker class
+    worker_class = 'synqs_devices.MakoCamera.blacs_workers.MakoCameraWorker'

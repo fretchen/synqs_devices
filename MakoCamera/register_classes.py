@@ -14,6 +14,6 @@ from labscript_devices import register_classes
 
 register_classes(
     'MakoCamera',
-    BLACS_tab='labscript_devices.MakoCamera.blacs_tabs.MakoCameraTab',
+    BLACS_tab='synqs_devices.MakoCamera.blacs_tabs.MakoCameraTab',
     runviewer_parser=None,
 )
