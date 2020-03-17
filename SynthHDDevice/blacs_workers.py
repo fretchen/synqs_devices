@@ -7,7 +7,7 @@ from windfreak import SynthHD
 
 
 class SynthHDWorker(Worker):
-    def init(self):
+    def __init__(self):
         # Make a serial connection to the device. The com port and buad rate which
         # were passed to us from the BLACS tab are now available as instance attributes
 
