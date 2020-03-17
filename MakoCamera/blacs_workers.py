@@ -35,7 +35,7 @@ class Mako_Camera(object):
         vimba = Vimba()
         vimba.startup()
         sn=str(serial_number)
-        Camera_ID='50-05369'+ sn
+        Camera_ID='50-0'+ sn
         #print(serial_number)
         #serial_number='DEV_000F315C1307'+str(serial_number)'DEV_000F315C57F9''50-0536923001'
         #pos
