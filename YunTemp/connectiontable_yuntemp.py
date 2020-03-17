@@ -1,6 +1,6 @@
 from labscript import *
 
-from labscript_devices import CustomArduinoDevice
+from user_devices.CustomArduinoDevice.labscript_devices import CustomArduinoDevice
 from labscript_devices.DummyPseudoclock.labscript_devices import DummyPseudoclock
 
 DummyPseudoclock(name='clock_0')
