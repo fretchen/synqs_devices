@@ -213,3 +213,11 @@ This is now the serial port on which #blacs can look for the Arduino.
 ## Setting up a basic user interface
 
 We now have some serial device
+
+# documentation
+
+to add the new device to the documentation you should run within docs
+
+```
+sphinx-apidoc -o source/ ../<package-name>  
+```

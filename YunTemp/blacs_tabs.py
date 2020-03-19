@@ -3,6 +3,10 @@ from blacs.device_base_class import DeviceTab
 class YunTempTab(DeviceTab):
     def initialise_workers(self):
 
+        #  create the layout of the widgets
+        dds_widgets,ao_widgets,do_widgets = self.auto_create_widgets()
+        self.auto_place_widgets(dds_widgets,do_widgets)
+
         # Look up the COM port and baud rate in the connection table:
         connection_table = self.settings['connection_table']
         device = connection_table.find_by_name(self.device_name)
