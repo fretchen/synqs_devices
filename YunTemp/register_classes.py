@@ -13,7 +13,7 @@
 from labscript_devices import register_classes
 
 register_classes(
-    'MakoCamera',
-    BLACS_tab='synqs_devices.MakoCamera.blacs_tabs.MakoCameraTab',
+    'YunTemp',
+    BLACS_tab='user_devices.YunTemp.blacs_tabs.YunTempTab',
     runviewer_parser=None,
 )

@@ -15,7 +15,7 @@ class CustomArduinoDeviceTab(DeviceTab):
         # baud rate, which it will need:
         self.create_worker(
             'main_worker',
-            'synqs_devices.CustomArduinoDevice.blacs_workers.CustomArduinoDeviceWorker',
+            'user_devices.CustomArduinoDevice.blacs_workers.CustomArduinoDeviceWorker',
             {'com_port': com_port, 'baud_rate': baud_rate},
         )
         self.primary_worker = 'main_worker'
