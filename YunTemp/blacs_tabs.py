@@ -1,19 +1,20 @@
-#####################################################################
-#                                                                   #
-# /labscript_devices/MakoCamera/blacs_tabs.py                      #
-#                                                                   #
-# Copyright 2019, Monash University and contributors                #
-#                                                                   #
-# This file is part of labscript_devices, in the labscript suite    #
-# (see http://labscriptsuite.org), and is licensed under the        #
-# Simplified BSD License. See the license.txt file in the root of   #
-# the project for the full license.                                 #
-#                                                                   #
-#####################################################################
+from blacs.device_base_class import DeviceTab
 
-from labscript_devices.IMAQdxCamera.blacs_tabs import IMAQdxCameraTab
+class YunTempTab(DeviceTab):
+    def initialise_workers(self):
 
-class MakoCameraTab(IMAQdxCameraTab):
+        # Look up the COM port and baud rate in the connection table:
+        connection_table = self.settings['connection_table']
+        device = connection_table.find_by_name(self.device_name)
 
-    # override worker class
-    worker_class = 'synqs_devices.MakoCamera.blacs_workers.MakoCameraWorker'
+        com_port = device.properties['com_port']
+        baud_rate = device.properties['baud_rate']
+
+        # Start a worker process with our worker class, and pass it the com port and
+        # baud rate, which it will need:
+        self.create_worker(
+            'main_worker',
+            'user_devices.YunTemp.blacs_workers.YunTempWorker',
+            {'com_port': com_port, 'baud_rate': baud_rate},
+        )
+        self.primary_worker = 'main_worker'

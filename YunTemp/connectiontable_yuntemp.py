@@ -1,10 +1,8 @@
 from labscript import *
 
-from user_devices.CustomArduinoDevice.labscript_devices import CustomArduinoDevice
-from labscript_devices.DummyPseudoclock.labscript_devices import DummyPseudoclock
+from user_devices.YunTemp.labscript_devices import YunTemp
 
-DummyPseudoclock(name='clock_0')
-CustomArduinoDevice('arduino_0', com_port="/dev/ttys004")
+YunTemp(name='temp_control_0')
 
 #if __name__ == '__main__':
 start()

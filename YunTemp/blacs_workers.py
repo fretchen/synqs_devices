@@ -1,161 +1,115 @@
-#####################################################################
-#                                                                   #
-# /labscript_devices/MakoCamera/blacs_workers.py                   #
-#                                                                   #
-# Copyright 2019, Monash University and contributors                #
-#                                                                   #
-# This file is part of labscript_devices, in the labscript suite    #
-# (see http://labscriptsuite.org), and is licensed under the        #
-# Simplified BSD License. See the license.txt file in the root of   #
-# the project for the full license.                                 #
-#                                                                   #
-#####################################################################
+import serial
+import time
+import labscript_utils.h5_lock
+import h5py
+from blacs.tab_base_classes import Worker
 
-# Original imaqdx_camera server by dt, with modifications by rpanderson and cbillington.
 
-#import numpy as np
-from labscript_utils import dedent
-#from time import sleep
-from labscript_devices.IMAQdxCamera.blacs_workers import IMAQdxCameraWorker
 
-# Don't import API yet so as not to throw an error, allow worker to run as a dummy
-# device, or for subclasses to import this module to inherit classes without requiring API
-Vimba = None
-VimbaException = None
+class YunTempWorker(Worker):
+    def __init__(self):
+        # Make a serial connection to the device. The com port and buad rate which
+        # were passed to us from the BLACS tab are now available as instance attributes
+        self.connection = serial.Serial(
+            self.com_port, baudrate=self.baud_rate, timeout=0.1
+        )
+        ser = self.connection;
 
-class Mako_Camera(object):
-    def __init__(self, serial_number):
-        global Vimba
-        global VimbaException
-        from pymba import Vimba, VimbaException
+        #every time the device is restarted in BLACS,we reset the arduino after opening the serial port; this is a peculiar nature of our setup.
+        #Note that this reset when called here, doesn't run in every shot.
+        self.reset_connection(ser);
 
-        self.data=[]
-        self.frames=[]
-        self.itr=0
-        vimba = Vimba()
-        vimba.startup()
-        sn=str(serial_number)
-        Camera_ID='50-05369'+ sn
-        #print(serial_number)
-        #serial_number='DEV_000F315C1307'+str(serial_number)'DEV_000F315C57F9''50-0536923001'
-        #pos
-        self.camera = vimba.camera(Camera_ID)#vimba.camera_ids()[serial_number])#Device id.
-        self.camera.open(camera_access_mode = 1)
+        # Could send and receive data here to confirm the device is working and do
+        # any initial setup that is not related to any particular shot.
 
-    def set_attributes(self, attributes_dict):
-        for prop, vals in attributes_dict.items():
-            self.set_attribute(prop, vals)
+        # Each shot, we will remember the shot file for the duration of that shot
+        self.shot_file = None
 
-    def set_attribute(self, name, value):
-        """Set the value of the attribute of the given name to the given value"""
-        try:
-            setattr(self.camera, name, value)
-        except:
-            print('failed to set {name} to {value}')
-        #feature = self.camera.feature(name)
-        #feature.value = value
 
-    def get_attributes(self, visibility_level, writeable_only=True):
-        """Return a dict of all attributes of readable attributes, for the given
-        visibility level. Optionally return only writeable attributes.
+    def reset_connection(self, ser):
+
+        """ this function, when called resets the arduino. Please be aware that the serial port should be open before you call this function.
+        It resets Arduino DUE, and clears everything in its input and reads fresh from the arduino. The arduino when ready for the string
+        to be written for the ramps displays 'Arduino ready', which is displayed in the device in BLACS. If you don't see this, check your code.
         """
-        props = {}
-        features=self.camera.feature_names()
-        for feature in features:
-            props[feature]=self.get_attribute(feature)
+        print(self.connection.is_open)   #check whether the port is open. Displays True in the BLACS device tab
+        ser.setRTS(True)
+        ser.setDTR(True)
+        time.sleep(0.1)
+        ser.setRTS(False)
+        ser.setDTR(False)
+        ser.reset_input_buffer();
 
-        del props['AcquisitionAbort'], props['AcquisitionStart'], props['AcquisitionStop'], props['GVSPAdjustPacketSize'], props['GevTimestampControlLatch'], props['GevTimestampControlReset'], props['LUTLoadAll'], props['LUTSaveAll'], props['TriggerSoftware'], props['UserSetLoad'], props['UserSetSave']
-        return props
+        line = ser.readline();
+        ard_str = line[0:-2];
+        print(ard_str)
 
-    def get_attribute(self, name):
-        """Return current value of attribute of the given name"""
-        value = getattr(self.camera, name)
-        return value
+    # We don't use this method but it needs to be defined:
+    def program_manual(self, values):
+        return {}
 
-    def snap(self):
-        self.itr=0
-        mako_attributes={'AcquisitionMode':'Continuous', 'ExposureMode':'Timed', 'ExposureTimeAbs':3000, 'TriggerActivation':'RisingEdge', 'TriggerMode':'Off',  'TriggerSelector':'FrameStart', 'TriggerSource':'Freerun'}
-        self.set_attributes(mako_attributes)
-        #self.set_attribute('ExposureTimeAbs',5000)
-        self.frames=[self.camera.new_frame()]
-        for self.frame in self.frames:
-            self.frame.announce()
-            self.camera.start_capture()
-            self.frame.queue_for_capture()
-            self.camera.AcquisitionStart()
-            img=self.grab()
-            self.camera.AcquisitionStop()
-            self.camera.disarm()
-        return img
+    def transition_to_buffered(self, device_name, h5_file, initial_values, fresh):
+        # Read commands from the shot file and send them to the device
 
-    def configure_acquisition(self, continuous=True, bufferCount=7):
-        mako_attributes={'AcquisitionMode':'Continuous', 'ExposureMode':'Timed', 'ExposureTimeAbs':3000, 'TriggerActivation':'RisingEdge', 'TriggerMode':'Off',  'TriggerSelector':'FrameStart', 'TriggerSource':'Freerun'}
-        self.set_attributes(mako_attributes)
-        if continuous:
-            self.camera.AcquisitionMode='Continuous'
-            one=True
-            self.frames=[self.camera.new_frame() for _ in range(bufferCount)]#Make a frame buffer.
+        #this is when the hardware communication begins. It's important to reset the arduino here.
+        self.reset_connection(self.connection)
 
-            for self.frame in self.frames:
-                self.frame.announce()
-                if one:
-                    self.camera.start_capture()
-                    one=False
-                self.frame.queue_for_capture()
+        self.shot_file = h5_file
+        with h5py.File(self.shot_file, 'r') as f:
+            group = f[f'devices/{self.device_name}']
+            if 'START_COMMANDS' in group:
+                start_commands = group['START_COMMANDS'][:]
+            else:
+                start_commands = None
+        # It is polite to close the shot file (by exiting the 'with' block) before
+        # communicating with the hardware, because other processes cannot open the file
+        # whilst we still have it open
+        for command in start_commands:
+            print(f"sending command: {repr(command)}")
 
-            self.camera.AcquisitionStart()
+            self.connection.write(command)
+            #self.connection.flush()
+            # this command is written in Experiment.py, which is fetched here and actually written onto the arduino
+            #you will see this in the BLACS device tab. It's nothing but the string that we should send to the arduino
+            #inorder to control the DDS
 
-        else:
-            self.camera.TriggerMode = 'On'
-            self.camera.TriggerSource = 'Line1'
-            self.camera.AcquisitionMode='MultiFrame'
-            self.camera.ExposureMode = 'TriggerWidth'
+        # This is expected by BLACS, we should return the final values that numerical
+        # channels have from th shot - for us we have no channels so this is an empty
+        # dictionary
+        return{}
 
+    def transition_to_manual(self):
+        # Read commands from the shot file and send them to the device
+        with h5py.File(self.shot_file, 'r') as f:
+            group = f[f'devices/{self.device_name}']
+            if 'STOP_COMMANDS' in group:
+                stop_commands = group['STOP_COMMANDS'][:]
+            else:
+                stop_commands = None
+        for command in stop_commands:
+            print(f"sending command: {repr(command)}")
+            self.connection.write(command)
 
-    def grab(self):
-        """Grab and return single image during pre-configured acquisition."""
-        self.frames[self.itr].wait_for_capture(1000)
-        self.data=self.frames[self.itr].buffer_data_numpy()
-        self.frames[self.itr].queue_for_capture()
-        self.itr+=1
-        if self.itr==len(self.frames):
-            self.itr=0
+        # Forget the shot file:
+        self.shot_file = None
 
-        return self.data
+        # This is expected by BLACS to indicate success:
+        return True
 
-    def grab_multiple(self, n_images,images):
-        """Grab n_images into images array during buffered acquistion. Length of exposure is controlled by the hardware TTL trigger duration"""
-        self.frames=[self.camera.new_frame() for _ in range(n_images)]#Make a frame buffer.
-        for self.frame in self.frames:
-            self.frame.announce()
-        self.camera.start_capture()
-        for i in range(n_images):
-            self.frames[i].queue_for_capture()
-            self.camera.AcquisitionStart()
-            self.frames[i].wait_for_capture(21000)#in ms
-            images.append(self.frames[i].buffer_data_numpy())
-            self.camera.AcquisitionStop()
+    def shutdown(self):
+        # Called when BLACS closes
+        self.connection.close()
 
-    def stop_acquisition(self):
-        self.camera.AcquisitionStop()
-        self.camera.disarm()
+    def abort_buffered(self):
+        # Called when a shot is aborted. We may or may not want to run
+        # transition_to_manual in this case. If not, then this method should do whatever
+        # else it needs to, and then return True. It should make sure to clear any state
+        # were storing about this shot (e.g. it should set self.shot_file = None)
+        return self.transition_to_manual()
 
-    def abort_acquisition(self):
-        self.camera.AcquisitionAbort()
-
-    def close(self):
-        self.camera.disarm()
-        self.camera.close()
-
-
-class MakoCameraWorker(IMAQdxCameraWorker):
-    """Mako API Camera Worker.
-
-    Inherits from IMAQdxCameraWorker. Overloads get_attributes_as_dict
-    to use Mako_Camera.get_attributes() method."""
-    interface_class = Mako_Camera
-
-    def get_attributes_as_dict(self, visibility_level):
-        """Return a dict of the attributes of the camera for the given visibility
-        level"""
-        return self.camera.get_attributes(visibility_level)
+    def abort_transition_to_buffered(self):
+        # This is called if transition_to_buffered fails with an exception or returns
+        # False.
+        # Forget the shot file:
+        self.shot_file = None
+        return True # Indicates success
