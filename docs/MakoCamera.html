@@ -1,21 +1,21 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>MakoCamera package &#8212; Synqs Devices  documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="SynthHDDevice package" href="SynthHDDevice.html" />
+    <link rel="prev" title="CustomArduinoDevice package" href="CustomArduinoDevice.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -41,11 +41,11 @@
 <span id="makocamera-blacs-tabs-module"></span><h2>MakoCamera.blacs_tabs module<a class="headerlink" href="#module-MakoCamera.blacs_tabs" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="MakoCamera.blacs_tabs.MakoCameraTab">
-<em class="property">class </em><code class="descclassname">MakoCamera.blacs_tabs.</code><code class="descname">MakoCameraTab</code><span class="sig-paren">(</span><em>notebook</em>, <em>settings</em>, <em>restart=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MakoCamera/blacs_tabs.html#MakoCameraTab"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MakoCamera.blacs_tabs.MakoCameraTab" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">MakoCamera.blacs_tabs.</code><code class="sig-name descname">MakoCameraTab</code><span class="sig-paren">(</span><em class="sig-param">notebook</em>, <em class="sig-param">settings</em>, <em class="sig-param">restart=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MakoCamera/blacs_tabs.html#MakoCameraTab"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MakoCamera.blacs_tabs.MakoCameraTab" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">labscript_devices.IMAQdxCamera.blacs_tabs.IMAQdxCameraTab</span></code></p>
 <dl class="attribute">
 <dt id="MakoCamera.blacs_tabs.MakoCameraTab.worker_class">
-<code class="descname">worker_class</code><em class="property"> = 'user_devices.MakoCamera.blacs_workers.MakoCameraWorker'</em><a class="headerlink" href="#MakoCamera.blacs_tabs.MakoCameraTab.worker_class" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">worker_class</code><em class="property"> = 'user_devices.MakoCamera.blacs_workers.MakoCameraWorker'</em><a class="headerlink" href="#MakoCamera.blacs_tabs.MakoCameraTab.worker_class" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -55,21 +55,21 @@
 <span id="makocamera-blacs-workers-module"></span><h2>MakoCamera.blacs_workers module<a class="headerlink" href="#module-MakoCamera.blacs_workers" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="MakoCamera.blacs_workers.MakoCameraWorker">
-<em class="property">class </em><code class="descclassname">MakoCamera.blacs_workers.</code><code class="descname">MakoCameraWorker</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MakoCamera/blacs_workers.html#MakoCameraWorker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MakoCamera.blacs_workers.MakoCameraWorker" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">MakoCamera.blacs_workers.</code><code class="sig-name descname">MakoCameraWorker</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MakoCamera/blacs_workers.html#MakoCameraWorker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MakoCamera.blacs_workers.MakoCameraWorker" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">labscript_devices.IMAQdxCamera.blacs_workers.IMAQdxCameraWorker</span></code></p>
 <p>Mako API Camera Worker.</p>
 <p>Inherits from IMAQdxCameraWorker. Overloads get_attributes_as_dict
 to use Mako_Camera.get_attributes() method.</p>
 <dl class="method">
 <dt id="MakoCamera.blacs_workers.MakoCameraWorker.get_attributes_as_dict">
-<code class="descname">get_attributes_as_dict</code><span class="sig-paren">(</span><em>visibility_level</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MakoCamera/blacs_workers.html#MakoCameraWorker.get_attributes_as_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MakoCamera.blacs_workers.MakoCameraWorker.get_attributes_as_dict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_attributes_as_dict</code><span class="sig-paren">(</span><em class="sig-param">visibility_level</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MakoCamera/blacs_workers.html#MakoCameraWorker.get_attributes_as_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MakoCamera.blacs_workers.MakoCameraWorker.get_attributes_as_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a dict of the attributes of the camera for the given visibility
 level</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="MakoCamera.blacs_workers.MakoCameraWorker.interface_class">
-<code class="descname">interface_class</code><a class="headerlink" href="#MakoCamera.blacs_workers.MakoCameraWorker.interface_class" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">interface_class</code><a class="headerlink" href="#MakoCamera.blacs_workers.MakoCameraWorker.interface_class" title="Permalink to this definition">¶</a></dt>
 <dd><p>alias of <a class="reference internal" href="#MakoCamera.blacs_workers.Mako_Camera" title="MakoCamera.blacs_workers.Mako_Camera"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mako_Camera</span></code></a></p>
 </dd></dl>
 
@@ -77,67 +77,67 @@ level</p>
 
 <dl class="class">
 <dt id="MakoCamera.blacs_workers.Mako_Camera">
-<em class="property">class </em><code class="descclassname">MakoCamera.blacs_workers.</code><code class="descname">Mako_Camera</code><span class="sig-paren">(</span><em>serial_number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MakoCamera/blacs_workers.html#Mako_Camera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MakoCamera.blacs_workers.Mako_Camera" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">MakoCamera.blacs_workers.</code><code class="sig-name descname">Mako_Camera</code><span class="sig-paren">(</span><em class="sig-param">serial_number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MakoCamera/blacs_workers.html#Mako_Camera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MakoCamera.blacs_workers.Mako_Camera" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="method">
 <dt id="MakoCamera.blacs_workers.Mako_Camera.abort_acquisition">
-<code class="descname">abort_acquisition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MakoCamera/blacs_workers.html#Mako_Camera.abort_acquisition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MakoCamera.blacs_workers.Mako_Camera.abort_acquisition" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">abort_acquisition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MakoCamera/blacs_workers.html#Mako_Camera.abort_acquisition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MakoCamera.blacs_workers.Mako_Camera.abort_acquisition" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="MakoCamera.blacs_workers.Mako_Camera.close">
-<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MakoCamera/blacs_workers.html#Mako_Camera.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MakoCamera.blacs_workers.Mako_Camera.close" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MakoCamera/blacs_workers.html#Mako_Camera.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MakoCamera.blacs_workers.Mako_Camera.close" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="MakoCamera.blacs_workers.Mako_Camera.configure_acquisition">
-<code class="descname">configure_acquisition</code><span class="sig-paren">(</span><em>continuous=True</em>, <em>bufferCount=7</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MakoCamera/blacs_workers.html#Mako_Camera.configure_acquisition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MakoCamera.blacs_workers.Mako_Camera.configure_acquisition" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">configure_acquisition</code><span class="sig-paren">(</span><em class="sig-param">continuous=True</em>, <em class="sig-param">bufferCount=7</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MakoCamera/blacs_workers.html#Mako_Camera.configure_acquisition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MakoCamera.blacs_workers.Mako_Camera.configure_acquisition" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="MakoCamera.blacs_workers.Mako_Camera.get_attribute">
-<code class="descname">get_attribute</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MakoCamera/blacs_workers.html#Mako_Camera.get_attribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MakoCamera.blacs_workers.Mako_Camera.get_attribute" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_attribute</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MakoCamera/blacs_workers.html#Mako_Camera.get_attribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MakoCamera.blacs_workers.Mako_Camera.get_attribute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return current value of attribute of the given name</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="MakoCamera.blacs_workers.Mako_Camera.get_attributes">
-<code class="descname">get_attributes</code><span class="sig-paren">(</span><em>visibility_level</em>, <em>writeable_only=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MakoCamera/blacs_workers.html#Mako_Camera.get_attributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MakoCamera.blacs_workers.Mako_Camera.get_attributes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_attributes</code><span class="sig-paren">(</span><em class="sig-param">visibility_level</em>, <em class="sig-param">writeable_only=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MakoCamera/blacs_workers.html#Mako_Camera.get_attributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MakoCamera.blacs_workers.Mako_Camera.get_attributes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a dict of all attributes of readable attributes, for the given
 visibility level. Optionally return only writeable attributes.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="MakoCamera.blacs_workers.Mako_Camera.grab">
-<code class="descname">grab</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MakoCamera/blacs_workers.html#Mako_Camera.grab"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MakoCamera.blacs_workers.Mako_Camera.grab" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">grab</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MakoCamera/blacs_workers.html#Mako_Camera.grab"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MakoCamera.blacs_workers.Mako_Camera.grab" title="Permalink to this definition">¶</a></dt>
 <dd><p>Grab and return single image during pre-configured acquisition.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="MakoCamera.blacs_workers.Mako_Camera.grab_multiple">
-<code class="descname">grab_multiple</code><span class="sig-paren">(</span><em>n_images</em>, <em>images</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MakoCamera/blacs_workers.html#Mako_Camera.grab_multiple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MakoCamera.blacs_workers.Mako_Camera.grab_multiple" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">grab_multiple</code><span class="sig-paren">(</span><em class="sig-param">n_images</em>, <em class="sig-param">images</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MakoCamera/blacs_workers.html#Mako_Camera.grab_multiple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MakoCamera.blacs_workers.Mako_Camera.grab_multiple" title="Permalink to this definition">¶</a></dt>
 <dd><p>Grab n_images into images array during buffered acquistion. Length of exposure is controlled by the hardware TTL trigger duration</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="MakoCamera.blacs_workers.Mako_Camera.set_attribute">
-<code class="descname">set_attribute</code><span class="sig-paren">(</span><em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MakoCamera/blacs_workers.html#Mako_Camera.set_attribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MakoCamera.blacs_workers.Mako_Camera.set_attribute" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_attribute</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MakoCamera/blacs_workers.html#Mako_Camera.set_attribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MakoCamera.blacs_workers.Mako_Camera.set_attribute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the value of the attribute of the given name to the given value</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="MakoCamera.blacs_workers.Mako_Camera.set_attributes">
-<code class="descname">set_attributes</code><span class="sig-paren">(</span><em>attributes_dict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MakoCamera/blacs_workers.html#Mako_Camera.set_attributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MakoCamera.blacs_workers.Mako_Camera.set_attributes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">set_attributes</code><span class="sig-paren">(</span><em class="sig-param">attributes_dict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MakoCamera/blacs_workers.html#Mako_Camera.set_attributes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MakoCamera.blacs_workers.Mako_Camera.set_attributes" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="MakoCamera.blacs_workers.Mako_Camera.snap">
-<code class="descname">snap</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MakoCamera/blacs_workers.html#Mako_Camera.snap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MakoCamera.blacs_workers.Mako_Camera.snap" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">snap</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MakoCamera/blacs_workers.html#Mako_Camera.snap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MakoCamera.blacs_workers.Mako_Camera.snap" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="MakoCamera.blacs_workers.Mako_Camera.stop_acquisition">
-<code class="descname">stop_acquisition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MakoCamera/blacs_workers.html#Mako_Camera.stop_acquisition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MakoCamera.blacs_workers.Mako_Camera.stop_acquisition" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">stop_acquisition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/MakoCamera/blacs_workers.html#Mako_Camera.stop_acquisition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MakoCamera.blacs_workers.Mako_Camera.stop_acquisition" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -147,11 +147,11 @@ visibility level. Optionally return only writeable attributes.</p>
 <span id="makocamera-labscript-devices-module"></span><h2>MakoCamera.labscript_devices module<a class="headerlink" href="#module-MakoCamera.labscript_devices" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="MakoCamera.labscript_devices.MakoCamera">
-<em class="property">class </em><code class="descclassname">MakoCamera.labscript_devices.</code><code class="descname">MakoCamera</code><span class="sig-paren">(</span><em>name</em>, <em>parent_device</em>, <em>connection</em>, <em>serial_number</em>, <em>orientation=None</em>, <em>trigger_edge_type='rising'</em>, <em>trigger_duration=None</em>, <em>minimum_recovery_time=0.0</em>, <em>camera_attributes=None</em>, <em>manual_mode_camera_attributes=None</em>, <em>stop_acquisition_timeout=5.0</em>, <em>exception_on_failed_shot=True</em>, <em>saved_attribute_visibility_level='intermediate'</em>, <em>mock=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MakoCamera/labscript_devices.html#MakoCamera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MakoCamera.labscript_devices.MakoCamera" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">MakoCamera.labscript_devices.</code><code class="sig-name descname">MakoCamera</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">parent_device</em>, <em class="sig-param">connection</em>, <em class="sig-param">serial_number</em>, <em class="sig-param">orientation=None</em>, <em class="sig-param">trigger_edge_type='rising'</em>, <em class="sig-param">trigger_duration=None</em>, <em class="sig-param">minimum_recovery_time=0.0</em>, <em class="sig-param">camera_attributes=None</em>, <em class="sig-param">manual_mode_camera_attributes=None</em>, <em class="sig-param">stop_acquisition_timeout=5.0</em>, <em class="sig-param">exception_on_failed_shot=True</em>, <em class="sig-param">saved_attribute_visibility_level='intermediate'</em>, <em class="sig-param">mock=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/MakoCamera/labscript_devices.html#MakoCamera"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#MakoCamera.labscript_devices.MakoCamera" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">labscript_devices.IMAQdxCamera.labscript_devices.IMAQdxCamera</span></code></p>
 <dl class="attribute">
 <dt id="MakoCamera.labscript_devices.MakoCamera.description">
-<code class="descname">description</code><em class="property"> = 'Mako Camera'</em><a class="headerlink" href="#MakoCamera.labscript_devices.MakoCamera.description" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">description</code><em class="property"> = 'Mako Camera'</em><a class="headerlink" href="#MakoCamera.labscript_devices.MakoCamera.description" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -182,26 +182,38 @@ visibility level. Optionally return only writeable attributes.</p>
 
 
 <h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">user_devices</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="CustomArduinoDevice.html">CustomArduinoDevice package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">MakoCamera package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SynthHDDevice.html">SynthHDDevice package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="YunTemp.html">YunTemp package</a></li>
+</ul>
+</li>
+</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">user_devices</a><ul>
+      <li>Previous: <a href="CustomArduinoDevice.html" title="previous chapter">CustomArduinoDevice package</a></li>
+      <li>Next: <a href="SynthHDDevice.html" title="next chapter">SynthHDDevice package</a></li>
+  </ul></li>
   </ul></li>
 </ul>
 </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
 
 
 
@@ -218,7 +230,7 @@ visibility level. Optionally return only writeable attributes.</p>
       &copy;2020, SynQS.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
