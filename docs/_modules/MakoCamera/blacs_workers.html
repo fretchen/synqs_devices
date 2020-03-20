@@ -1,0 +1,264 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>MakoCamera.blacs_workers &#8212; Synqs Devices  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for MakoCamera.blacs_workers</h1><div class="highlight"><pre>
+<span></span><span class="c1">#####################################################################</span>
+<span class="c1">#                                                                   #</span>
+<span class="c1"># /labscript_devices/MakoCamera/blacs_workers.py                   #</span>
+<span class="c1">#                                                                   #</span>
+<span class="c1"># Copyright 2019, Monash University and contributors                #</span>
+<span class="c1">#                                                                   #</span>
+<span class="c1"># This file is part of labscript_devices, in the labscript suite    #</span>
+<span class="c1"># (see http://labscriptsuite.org), and is licensed under the        #</span>
+<span class="c1"># Simplified BSD License. See the license.txt file in the root of   #</span>
+<span class="c1"># the project for the full license.                                 #</span>
+<span class="c1">#                                                                   #</span>
+<span class="c1">#####################################################################</span>
+
+<span class="c1"># Original imaqdx_camera server by dt, with modifications by rpanderson and cbillington.</span>
+
+<span class="c1">#import numpy as np</span>
+<span class="kn">from</span> <span class="nn">labscript_utils</span> <span class="k">import</span> <span class="n">dedent</span>
+<span class="c1">#from time import sleep</span>
+<span class="kn">from</span> <span class="nn">labscript_devices.IMAQdxCamera.blacs_workers</span> <span class="k">import</span> <span class="n">IMAQdxCameraWorker</span>
+
+<span class="c1"># Don&#39;t import API yet so as not to throw an error, allow worker to run as a dummy</span>
+<span class="c1"># device, or for subclasses to import this module to inherit classes without requiring API</span>
+<span class="n">Vimba</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">VimbaException</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="Mako_Camera"><a class="viewcode-back" href="../../MakoCamera.html#MakoCamera.blacs_workers.Mako_Camera">[docs]</a><span class="k">class</span> <span class="nc">Mako_Camera</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">serial_number</span><span class="p">):</span>
+        <span class="k">global</span> <span class="n">Vimba</span>
+        <span class="k">global</span> <span class="n">VimbaException</span>
+        <span class="kn">from</span> <span class="nn">pymba</span> <span class="k">import</span> <span class="n">Vimba</span><span class="p">,</span> <span class="n">VimbaException</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">=</span><span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="o">=</span><span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">itr</span><span class="o">=</span><span class="mi">0</span>
+        <span class="n">vimba</span> <span class="o">=</span> <span class="n">Vimba</span><span class="p">()</span>
+        <span class="n">vimba</span><span class="o">.</span><span class="n">startup</span><span class="p">()</span>
+        <span class="n">sn</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">serial_number</span><span class="p">)</span>
+        <span class="n">Camera_ID</span><span class="o">=</span><span class="s1">&#39;50-0&#39;</span><span class="o">+</span> <span class="n">sn</span>
+        <span class="c1">#print(serial_number)</span>
+        <span class="c1">#serial_number=&#39;DEV_000F315C1307&#39;+str(serial_number)&#39;DEV_000F315C57F9&#39;&#39;50-0536923001&#39;</span>
+        <span class="c1">#pos</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">camera</span> <span class="o">=</span> <span class="n">vimba</span><span class="o">.</span><span class="n">camera</span><span class="p">(</span><span class="n">Camera_ID</span><span class="p">)</span><span class="c1">#vimba.camera_ids()[serial_number])#Device id.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">camera_access_mode</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+        
+<div class="viewcode-block" id="Mako_Camera.set_attributes"><a class="viewcode-back" href="../../MakoCamera.html#MakoCamera.blacs_workers.Mako_Camera.set_attributes">[docs]</a>    <span class="k">def</span> <span class="nf">set_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attributes_dict</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">prop</span><span class="p">,</span> <span class="n">vals</span> <span class="ow">in</span> <span class="n">attributes_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">prop</span><span class="p">,</span> <span class="n">vals</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="Mako_Camera.set_attribute"><a class="viewcode-back" href="../../MakoCamera.html#MakoCamera.blacs_workers.Mako_Camera.set_attribute">[docs]</a>    <span class="k">def</span> <span class="nf">set_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the value of the attribute of the given name to the given value&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;failed to set </span><span class="si">{name}</span><span class="s1"> to </span><span class="si">{value}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+        <span class="c1">#feature = self.camera.feature(name)</span>
+        <span class="c1">#feature.value = value</span>
+    
+<div class="viewcode-block" id="Mako_Camera.get_attributes"><a class="viewcode-back" href="../../MakoCamera.html#MakoCamera.blacs_workers.Mako_Camera.get_attributes">[docs]</a>    <span class="k">def</span> <span class="nf">get_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">visibility_level</span><span class="p">,</span> <span class="n">writeable_only</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a dict of all attributes of readable attributes, for the given</span>
+<span class="sd">        visibility level. Optionally return only writeable attributes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">props</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">features</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">feature_names</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">features</span><span class="p">:</span>
+            <span class="n">props</span><span class="p">[</span><span class="n">feature</span><span class="p">]</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+        
+        <span class="k">del</span> <span class="n">props</span><span class="p">[</span><span class="s1">&#39;AcquisitionAbort&#39;</span><span class="p">],</span> <span class="n">props</span><span class="p">[</span><span class="s1">&#39;AcquisitionStart&#39;</span><span class="p">],</span> <span class="n">props</span><span class="p">[</span><span class="s1">&#39;AcquisitionStop&#39;</span><span class="p">],</span> <span class="n">props</span><span class="p">[</span><span class="s1">&#39;GVSPAdjustPacketSize&#39;</span><span class="p">],</span> <span class="n">props</span><span class="p">[</span><span class="s1">&#39;GevTimestampControlLatch&#39;</span><span class="p">],</span> <span class="n">props</span><span class="p">[</span><span class="s1">&#39;GevTimestampControlReset&#39;</span><span class="p">],</span> <span class="n">props</span><span class="p">[</span><span class="s1">&#39;LUTLoadAll&#39;</span><span class="p">],</span> <span class="n">props</span><span class="p">[</span><span class="s1">&#39;LUTSaveAll&#39;</span><span class="p">],</span> <span class="n">props</span><span class="p">[</span><span class="s1">&#39;TriggerSoftware&#39;</span><span class="p">],</span> <span class="n">props</span><span class="p">[</span><span class="s1">&#39;UserSetLoad&#39;</span><span class="p">],</span> <span class="n">props</span><span class="p">[</span><span class="s1">&#39;UserSetSave&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">props</span></div>
+
+<div class="viewcode-block" id="Mako_Camera.get_attribute"><a class="viewcode-back" href="../../MakoCamera.html#MakoCamera.blacs_workers.Mako_Camera.get_attribute">[docs]</a>    <span class="k">def</span> <span class="nf">get_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return current value of attribute of the given name&quot;&quot;&quot;</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">value</span></div>
+
+<div class="viewcode-block" id="Mako_Camera.snap"><a class="viewcode-back" href="../../MakoCamera.html#MakoCamera.blacs_workers.Mako_Camera.snap">[docs]</a>    <span class="k">def</span> <span class="nf">snap</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">itr</span><span class="o">=</span><span class="mi">0</span>
+        <span class="n">mako_attributes</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;AcquisitionMode&#39;</span><span class="p">:</span><span class="s1">&#39;Continuous&#39;</span><span class="p">,</span> <span class="s1">&#39;ExposureMode&#39;</span><span class="p">:</span><span class="s1">&#39;Timed&#39;</span><span class="p">,</span> <span class="s1">&#39;ExposureTimeAbs&#39;</span><span class="p">:</span><span class="mi">3000</span><span class="p">,</span> <span class="s1">&#39;TriggerActivation&#39;</span><span class="p">:</span><span class="s1">&#39;RisingEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;TriggerMode&#39;</span><span class="p">:</span><span class="s1">&#39;Off&#39;</span><span class="p">,</span>  <span class="s1">&#39;TriggerSelector&#39;</span><span class="p">:</span><span class="s1">&#39;FrameStart&#39;</span><span class="p">,</span> <span class="s1">&#39;TriggerSource&#39;</span><span class="p">:</span><span class="s1">&#39;Freerun&#39;</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_attributes</span><span class="p">(</span><span class="n">mako_attributes</span><span class="p">)</span>
+        <span class="c1">#self.set_attribute(&#39;ExposureTimeAbs&#39;,5000)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">new_frame</span><span class="p">()]</span>
+        <span class="k">for</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">announce</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">start_capture</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">queue_for_capture</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">AcquisitionStart</span><span class="p">()</span>
+            <span class="n">img</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">grab</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">AcquisitionStop</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">disarm</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">img</span></div>
+        
+<div class="viewcode-block" id="Mako_Camera.configure_acquisition"><a class="viewcode-back" href="../../MakoCamera.html#MakoCamera.blacs_workers.Mako_Camera.configure_acquisition">[docs]</a>    <span class="k">def</span> <span class="nf">configure_acquisition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">continuous</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bufferCount</span><span class="o">=</span><span class="mi">7</span><span class="p">):</span>
+        <span class="n">mako_attributes</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;AcquisitionMode&#39;</span><span class="p">:</span><span class="s1">&#39;Continuous&#39;</span><span class="p">,</span> <span class="s1">&#39;ExposureMode&#39;</span><span class="p">:</span><span class="s1">&#39;Timed&#39;</span><span class="p">,</span> <span class="s1">&#39;ExposureTimeAbs&#39;</span><span class="p">:</span><span class="mi">3000</span><span class="p">,</span> <span class="s1">&#39;TriggerActivation&#39;</span><span class="p">:</span><span class="s1">&#39;RisingEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;TriggerMode&#39;</span><span class="p">:</span><span class="s1">&#39;Off&#39;</span><span class="p">,</span>  <span class="s1">&#39;TriggerSelector&#39;</span><span class="p">:</span><span class="s1">&#39;FrameStart&#39;</span><span class="p">,</span> <span class="s1">&#39;TriggerSource&#39;</span><span class="p">:</span><span class="s1">&#39;Freerun&#39;</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_attributes</span><span class="p">(</span><span class="n">mako_attributes</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">continuous</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">AcquisitionMode</span><span class="o">=</span><span class="s1">&#39;Continuous&#39;</span>
+            <span class="n">one</span><span class="o">=</span><span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">new_frame</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">bufferCount</span><span class="p">)]</span><span class="c1">#Make a frame buffer.</span>
+        
+            <span class="k">for</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">announce</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">one</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">start_capture</span><span class="p">()</span>
+                    <span class="n">one</span><span class="o">=</span><span class="kc">False</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">queue_for_capture</span><span class="p">()</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">AcquisitionStart</span><span class="p">()</span>
+        
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">TriggerMode</span> <span class="o">=</span> <span class="s1">&#39;On&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">TriggerSource</span> <span class="o">=</span> <span class="s1">&#39;Line1&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">AcquisitionMode</span><span class="o">=</span><span class="s1">&#39;MultiFrame&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">ExposureMode</span> <span class="o">=</span> <span class="s1">&#39;TriggerWidth&#39;</span></div>
+            
+                        
+<div class="viewcode-block" id="Mako_Camera.grab"><a class="viewcode-back" href="../../MakoCamera.html#MakoCamera.blacs_workers.Mako_Camera.grab">[docs]</a>    <span class="k">def</span> <span class="nf">grab</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Grab and return single image during pre-configured acquisition.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">itr</span><span class="p">]</span><span class="o">.</span><span class="n">wait_for_capture</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">itr</span><span class="p">]</span><span class="o">.</span><span class="n">buffer_data_numpy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">itr</span><span class="p">]</span><span class="o">.</span><span class="n">queue_for_capture</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">itr</span><span class="o">+=</span><span class="mi">1</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">itr</span><span class="o">==</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">itr</span><span class="o">=</span><span class="mi">0</span>
+        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span></div>
+        
+<div class="viewcode-block" id="Mako_Camera.grab_multiple"><a class="viewcode-back" href="../../MakoCamera.html#MakoCamera.blacs_workers.Mako_Camera.grab_multiple">[docs]</a>    <span class="k">def</span> <span class="nf">grab_multiple</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_images</span><span class="p">,</span><span class="n">images</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Grab n_images into images array during buffered acquistion. Length of exposure is controlled by the hardware TTL trigger duration&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">new_frame</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_images</span><span class="p">)]</span><span class="c1">#Make a frame buffer.</span>
+        <span class="k">for</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">announce</span><span class="p">()</span>                    
+        <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">start_capture</span><span class="p">()</span>        
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_images</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">queue_for_capture</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">AcquisitionStart</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">wait_for_capture</span><span class="p">(</span><span class="mi">21000</span><span class="p">)</span><span class="c1">#in ms</span>
+            <span class="n">images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">buffer_data_numpy</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">AcquisitionStop</span><span class="p">()</span></div>
+   
+<div class="viewcode-block" id="Mako_Camera.stop_acquisition"><a class="viewcode-back" href="../../MakoCamera.html#MakoCamera.blacs_workers.Mako_Camera.stop_acquisition">[docs]</a>    <span class="k">def</span> <span class="nf">stop_acquisition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">AcquisitionStop</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">disarm</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Mako_Camera.abort_acquisition"><a class="viewcode-back" href="../../MakoCamera.html#MakoCamera.blacs_workers.Mako_Camera.abort_acquisition">[docs]</a>    <span class="k">def</span> <span class="nf">abort_acquisition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">AcquisitionAbort</span><span class="p">()</span></div>
+        
+<div class="viewcode-block" id="Mako_Camera.close"><a class="viewcode-back" href="../../MakoCamera.html#MakoCamera.blacs_workers.Mako_Camera.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">disarm</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
+        
+
+<div class="viewcode-block" id="MakoCameraWorker"><a class="viewcode-back" href="../../MakoCamera.html#MakoCamera.blacs_workers.MakoCameraWorker">[docs]</a><span class="k">class</span> <span class="nc">MakoCameraWorker</span><span class="p">(</span><span class="n">IMAQdxCameraWorker</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Mako API Camera Worker. </span>
+<span class="sd">    </span>
+<span class="sd">    Inherits from IMAQdxCameraWorker. Overloads get_attributes_as_dict </span>
+<span class="sd">    to use Mako_Camera.get_attributes() method.&quot;&quot;&quot;</span>
+    <span class="n">interface_class</span> <span class="o">=</span> <span class="n">Mako_Camera</span>
+
+<div class="viewcode-block" id="MakoCameraWorker.get_attributes_as_dict"><a class="viewcode-back" href="../../MakoCamera.html#MakoCamera.blacs_workers.MakoCameraWorker.get_attributes_as_dict">[docs]</a>    <span class="k">def</span> <span class="nf">get_attributes_as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">visibility_level</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a dict of the attributes of the camera for the given visibility</span>
+<span class="sd">        level&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">get_attributes</span><span class="p">(</span><span class="n">visibility_level</span><span class="p">)</span></div></div>
+
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Synqs Devices</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, SynQS.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

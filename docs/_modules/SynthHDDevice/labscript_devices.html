@@ -1,0 +1,145 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>SynthHDDevice.labscript_devices &#8212; Synqs Devices  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for SynthHDDevice.labscript_devices</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">h5py</span>
+
+<span class="kn">from</span> <span class="nn">labscript</span> <span class="k">import</span> <span class="n">Device</span><span class="p">,</span> <span class="n">set_passed_properties</span>
+
+
+<div class="viewcode-block" id="SynthHDDevice"><a class="viewcode-back" href="../../SynthHDDevice.html#SynthHDDevice.labscript_devices.SynthHDDevice">[docs]</a><span class="k">class</span> <span class="nc">SynthHDDevice</span><span class="p">(</span><span class="n">Device</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A labscript device to send commands to SynthHD at the beginning and end of</span>
+<span class="sd">    shots&quot;&quot;&quot;</span>
+
+    <span class="c1"># This decorator declares that some keyword arguments should be saved to the</span>
+    <span class="c1"># connection table, so that BLACS can read them:</span>
+    <span class="nd">@set_passed_properties</span><span class="p">({</span><span class="s1">&#39;connection_table_properties&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;com_port&#39;</span><span class="p">,</span> <span class="s1">&#39;baud_rate&#39;</span><span class="p">]})</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">com_port</span><span class="o">=</span><span class="s1">&#39;COM1&#39;</span><span class="p">,</span> <span class="n">baud_rate</span><span class="o">=</span><span class="mi">115200</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">Device</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">parent_device</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">connection</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_commands</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1">#self.stop_commands = []</span>
+        <span class="c1"># The existence of this attribute is how BLACS knows it needs to make a tab for</span>
+        <span class="c1"># this device:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">BLACS_connection</span> <span class="o">=</span> <span class="n">com_port</span>
+
+<div class="viewcode-block" id="SynthHDDevice.add_start_command"><a class="viewcode-back" href="../../SynthHDDevice.html#SynthHDDevice.labscript_devices.SynthHDDevice.add_start_command">[docs]</a>    <span class="k">def</span> <span class="nf">add_start_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add a serial command that should be send at the start of the experiment&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;command must be a bytestring&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_commands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">command</span><span class="p">)</span></div>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    def add_stop_command(self, command):</span>
+<span class="sd">        &quot;&quot;&quot;Add a serial command that should be send at the end of the experiment&quot;&quot;&quot;</span>
+<span class="sd">        if not isinstance(command, bytes):</span>
+<span class="sd">            raise TypeError(&quot;command must be a bytestring&quot;)</span>
+<span class="sd">        self.stop_commands.append(command)</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+<div class="viewcode-block" id="SynthHDDevice.generate_code"><a class="viewcode-back" href="../../SynthHDDevice.html#SynthHDDevice.labscript_devices.SynthHDDevice.generate_code">[docs]</a>    <span class="k">def</span> <span class="nf">generate_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hdf5_file</span><span class="p">):</span>
+        <span class="c1"># Convert the lists of commands into numpy arrays and save them to the shot file</span>
+        <span class="c1"># as HDF5 datasets within our device&#39;s group:</span>
+        <span class="n">vlenbytes</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">special_dtype</span><span class="p">(</span><span class="n">vlen</span><span class="o">=</span><span class="nb">bytes</span><span class="p">)</span>
+        <span class="n">start_commands</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start_commands</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">vlenbytes</span><span class="p">)</span>
+        <span class="c1">#stop_commands = np.array(self.stop_commands, dtype=vlenbytes)</span>
+        <span class="n">group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_device_group</span><span class="p">(</span><span class="n">hdf5_file</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_commands</span><span class="p">:</span>
+            <span class="n">group</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s1">&#39;START_COMMANDS&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">start_commands</span><span class="p">)</span></div></div>
+        <span class="c1">#if self.stop_commands:</span>
+            <span class="c1">#group.create_dataset(&#39;STOP_COMMANDS&#39;, data=stop_commands)</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Synqs Devices</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, SynQS.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
