@@ -6,6 +6,7 @@ Welcome to Synqs Devices's documentation!
    :caption: Contents:
 
    readme
+   newdevice
    modules
 
 Indices and tables

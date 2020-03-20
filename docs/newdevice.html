@@ -1,0 +1,307 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Create a new device &#8212; Synqs Devices  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="user_devices" href="modules.html" />
+    <link rel="prev" title="SynQS_devices" href="readme.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="create-a-new-device">
+<h1>Create a new device<a class="headerlink" href="#create-a-new-device" title="Permalink to this headline">¶</a></h1>
+<p>I will simply comment here on what I had to do to write an Arduino device for labscript</p>
+<ul class="simple">
+<li><p>Get blacs  and runmanager  installed. Not quite as trivial as it might sound…</p></li>
+<li><p>For running [blacs](<a class="reference external" href="https://github.com/labscript-suite/blacs">https://github.com/labscript-suite/blacs</a>) the first time there is a description called docs/UsingBlacs.pdf</p></li>
+<li><p>I will now follow the guide “How to add a new device” in the blacs folder</p></li>
+<li><p>However, it seems slightly out of date/incomplete. So will try to follow the recommendations of Philipp Starkeys thesis.</p></li>
+</ul>
+<p><a class="reference external" href="https://www.dropbox.com/s/mxoumrc2djibs3l/PhD_Starkey.pdf?dl=0">https://www.dropbox.com/s/mxoumrc2djibs3l/PhD_Starkey.pdf?dl=0</a></p>
+<p>Devices can be found in labscript_devices. To make things work, we need to add four classes:</p>
+<ol class="arabic simple">
+<li><p>labscript API - it must be name the same way as the file it lives in. It is marked through the python decorator &#64;labscript_device</p></li>
+<li><p>BLACS GUI - can be named as one wishes and has the decorator  &#64;BLACS_tab</p></li>
+<li><p>BLACS worker process - can be named as one wishes and has the decorator  &#64;BLACS_worker</p></li>
+</ol>
+<p>4. runviewer - can be named as one wishes and has the decorator  &#64;runviewer_parser
+Creating a compilable boilerplate
+- So let me start out with creating ArduinoUno.py in the folder labscript_devices.</p>
+<ul class="simple">
+<li><p>I then added the following header:</p></li>
+</ul>
+<dl>
+<dt><a href="#id1"><span class="problematic" id="id2">``</span></a>` python</dt><dd><p>from labscript import IntermediateDevice</p>
+<p>from blacs.device_base_class import DeviceTab
+from blacs.tab_base_classes import Worker</p>
+<p>from labscript_devices import BLACS_tab, BLACS_worker</p>
+</dd>
+</dl>
+<p><a href="#id3"><span class="problematic" id="id4">``</span></a><a href="#id5"><span class="problematic" id="id6">`</span></a></p>
+<ul class="simple">
+<li><p>The first step is to actually define some dummy device now. We then will most likely not create a pseudoclock, which means that we will make the device an IntermediateDevice.</p></li>
+</ul>
+<dl>
+<dt><a href="#id7"><span class="problematic" id="id8">``</span></a>` python</dt><dd><dl>
+<dt>class ArduinoUno(IntermediateDevice):</dt><dd><p># A human readable name for device model used in error messages
+description = ‘Arduino Uno’</p>
+<p># The maximum update rate of this device (in Hz)
+clock_limit = 100</p>
+<dl>
+<dt>def __init__(self, name, parent_device, com_port = “”, baud_rate= 115200):</dt><dd><p>IntermediateDevice.__init__(self, name, parent_device)
+self.BLACS_connection = ‘%s,%s’%(com_port , str(baud_rate))</p>
+</dd>
+<dt>def generate_code(self, hdf5_file):</dt><dd><p># Run the labscript suite base class method
+# (we assume inheritance from PseudoclockDevice here)
+# This generates instruction data for every child and
+# subsequent generation of children that is attached
+# to this device
+IntermediateDevice.generate_code(self, hdf5_file)</p>
+<p># Create the HDF5 group for storage of
+# device attributes and instructions
+group = self.init_device_group(hdf5_file)</p>
+<p># device specific code here …</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+<p><a href="#id9"><span class="problematic" id="id10">``</span></a>`
+We then have to work on the specific control of the device, but this would seem like a minimal code.
+The next step is to set up the GUI in BLACS through the DeviceTab class.</p>
+<dl>
+<dt><a href="#id11"><span class="problematic" id="id12">``</span></a><a href="#id13"><span class="problematic" id="id14">`</span></a>python</dt><dd><p>&#64;BLACS_tab
+class ArduinoUnoTab(DeviceTab):</p>
+<blockquote>
+<div><p>def initialise_GUI(self):</p>
+<blockquote>
+<div><p>#  create the layout of the widgets
+dds_widgets,ao_widgets,do_widgets = self.auto_create_widgets()
+self.auto_place_widgets(dds_widgets,do_widgets)</p>
+<p># Create and set the primary worker
+# the last ingredient are the parameters for the worker
+self.create_worker(“main_worker”,ArduinoUnoWorker,{})
+self.primary_worker = “main_worker”</p>
+<p># Set the capabilities of this device
+self.supports_remote_value_check(False)
+self.supports_smart_programming(False)</p>
+</div></blockquote>
+</div></blockquote>
+</dd>
+</dl>
+<p><a href="#id15"><span class="problematic" id="id16">``</span></a><a href="#id17"><span class="problematic" id="id18">`</span></a></p>
+<p>Finally, we have to create a worker that will make the contact between the GUI and the Hardware itself.
+<a href="#id19"><span class="problematic" id="id20">``</span></a><a href="#id21"><span class="problematic" id="id22">`</span></a>python</p>
+<blockquote>
+<div><dl class="simple">
+<dt>class ArduinoUnoWorker(Worker):</dt><dd><dl class="simple">
+<dt>def init(self):</dt><dd><p># Once off device initialisation code called when the
+# worker process is first started.
+# Usually this is used to create the connection to the
+# device and/or instantiate the API from the device
+# manufacturer
+pass</p>
+</dd>
+<dt>def shutdown(self):</dt><dd><p># Once off device shutdown code called when the
+# BLACS exits
+pass</p>
+</dd>
+<dt>def program_manual(self, front_panel_values):</dt><dd><p># Update the output state of each channel using the values
+# in front_panel_values (which takes the form of a
+# dictionary keyed by the channel names specified
+# BLACS GUI configuration
+# return a dictionary of coerced/quantised values
+# channel, keyed by the channel name (or an empty dictionary)
+return {}</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<p><a href="#id23"><span class="problematic" id="id24">``</span></a>`
+We have now setup the full the ArduinoUno.py file.</p>
+<p>## Create the GUI</p>
+<p>The next step is to bind it into the GUI. So we  create file, which we call connectiontable.py.
+And we save it in the folder userlib/labscriptlib/my_pc/
+It then contains:
+<a href="#id25"><span class="problematic" id="id26">``</span></a><a href="#id27"><span class="problematic" id="id28">`</span></a>python</p>
+<blockquote>
+<div><p>from labscript import *</p>
+<p>from labscript_devices.ArduinoUno import ArduinoUno
+from labscript_devices.DummyPseudoclock.labscript_device import DummyPseudoclock</p>
+<p>DummyPseudoclock(name=’clock_0’)
+ArduinoUno(name=’arduino_0’, parent_device=clock_0.clockline)</p>
+<dl class="simple">
+<dt>if __name__ == ‘__main__’:</dt><dd><p>start()
+stop(1)</p>
+</dd>
+</dl>
+</div></blockquote>
+<p><a href="#id29"><span class="problematic" id="id30">``</span></a><a href="#id31"><span class="problematic" id="id32">`</span></a></p>
+<ul class="simple">
+<li><p>The next step is to run this script in [runmanager](<a class="reference external" href="https://github.com/labscript-suite/runmanager">https://github.com/labscript-suite/runmanager</a>) as this creates the necessary h5 file for #blacs.</p></li>
+<li><p>So once we have run it in #runmanager it should have compiled without error you should find the file DATE_connectiontable_arduino_0.h5 .</p></li>
+<li><p>This file has to be renamed connectiontable.h5 and moved into the position, which was specied in the the labconfig.</p></li>
+<li><dl class="simple">
+<dt>You should now be able to start blacs through</dt><dd><p>python -m blacs</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>without any errors. Only an empty useless widget should be present for the moment.</p>
+<p>## Establishing a serial communication</p>
+<p>In a next step we have to give the whole thing some live. Which means that we already have to establish a serial connection with the arduino</p>
+<p>## Simulating a serial port</p>
+<p>If you have an arduino around and know on which port it lives you can skip this step. Otherwise, we will explain here how you can simulate such a serial port. For that we simply create a file simSerialPort.py in the folder /userlib/pythonlib/ of your #labscript installation. The file reads then:</p>
+<blockquote>
+<div><p>import os, pty
+import time
+import numpy as np</p>
+<dl>
+<dt>def test_serial():</dt><dd><p>setpoint  = 750;
+master, slave = pty.openpty()
+s_name = os.ttyname(slave)
+print(s_name)
+while True:</p>
+<blockquote>
+<div><p>meas = np.random.randint(700, 800)
+err = setpoint - meas;
+control = np.random.randint(10)
+gain =1
+tauI = 100
+tauD = 1
+mode = os.read(master, 1);
+if mode:</p>
+<blockquote>
+<div><p>print(‘mode {}’.format(mode))
+if mode == b’w’:</p>
+<blockquote>
+<div><p>ard_str = str(setpoint) + ‘,’ + str(meas) + ‘,’ + str(err) + ‘,’ + str(control)
+ard_str = ard_str + ‘,’ + str(gain) + ‘,’ + str(tauI) +’,’ + str(tauD) + ‘rn’
+out = ard_str.encode(‘windows-1252’)
+os.write(master, out)</p>
+</div></blockquote>
+<dl class="simple">
+<dt>if mode == b’s’:</dt><dd><p>set = os.read(master, 20);
+setpoint = int(set.decode(‘windows-1252’));
+print(‘s{}’.format(setpoint));</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>time.sleep(0.1)</p>
+</div></blockquote>
+</dd>
+<dt>if __name__==’__main__’:</dt><dd><p>test_serial()</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>This program basically emulates the behavior of an arduino used for temperature control. We can start it in the shell through (being in the right directory):</p>
+<blockquote>
+<div><p>python simSerialPort.py</p>
+</div></blockquote>
+<p>It will answer at the beginning with a single output, which will read something like this:</p>
+<blockquote>
+<div><p>/dev/ttys004</p>
+</div></blockquote>
+<p>This is now the serial port on which #blacs can look for the Arduino.</p>
+<p>## Setting up a basic user interface</p>
+<p>We now have some serial device</p>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Synqs Devices</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">SynQS_devices</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Create a new device</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">user_devices</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="readme.html" title="previous chapter">SynQS_devices</a></li>
+      <li>Next: <a href="modules.html" title="next chapter">user_devices</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, SynQS.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/newdevice.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
