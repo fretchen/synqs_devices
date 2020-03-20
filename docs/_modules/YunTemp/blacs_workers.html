@@ -40,7 +40,6 @@
 <span class="kn">from</span> <span class="nn">blacs.tab_base_classes</span> <span class="k">import</span> <span class="n">Worker</span>
 
 
-
 <div class="viewcode-block" id="YunTempWorker"><a class="viewcode-back" href="../../YunTemp.html#YunTemp.blacs_workers.YunTempWorker">[docs]</a><span class="k">class</span> <span class="nc">YunTempWorker</span><span class="p">(</span><span class="n">Worker</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Make a serial connection to the device. The com port and buad rate which</span>
@@ -48,11 +47,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="n">serial</span><span class="o">.</span><span class="n">Serial</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">com_port</span><span class="p">,</span> <span class="n">baudrate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">baud_rate</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">0.1</span>
         <span class="p">)</span>
-        <span class="n">ser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">;</span>
+        <span class="n">ser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span>
 
-        <span class="c1">#every time the device is restarted in BLACS,we reset the arduino after opening the serial port; this is a peculiar nature of our setup.</span>
-        <span class="c1">#Note that this reset when called here, doesn&#39;t run in every shot.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">reset_connection</span><span class="p">(</span><span class="n">ser</span><span class="p">);</span>
+        <span class="c1"># every time the device is restarted in BLACS,we reset the arduino after opening the serial port; this is a peculiar nature of our setup.</span>
+        <span class="c1"># Note that this reset when called here, doesn&#39;t run in every shot.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_connection</span><span class="p">(</span><span class="n">ser</span><span class="p">)</span>
 
         <span class="c1"># Could send and receive data here to confirm the device is working and do</span>
         <span class="c1"># any initial setup that is not related to any particular shot.</span>
@@ -60,23 +59,24 @@
         <span class="c1"># Each shot, we will remember the shot file for the duration of that shot</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">shot_file</span> <span class="o">=</span> <span class="kc">None</span>
 
-
 <div class="viewcode-block" id="YunTempWorker.reset_connection"><a class="viewcode-back" href="../../YunTemp.html#YunTemp.blacs_workers.YunTempWorker.reset_connection">[docs]</a>    <span class="k">def</span> <span class="nf">reset_connection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ser</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot; this function, when called resets the arduino. Please be aware that the serial port should be open before you call this function.</span>
 <span class="sd">        It resets Arduino DUE, and clears everything in its input and reads fresh from the arduino. The arduino when ready for the string</span>
 <span class="sd">        to be written for the ramps displays &#39;Arduino ready&#39;, which is displayed in the device in BLACS. If you don&#39;t see this, check your code.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">is_open</span><span class="p">)</span>   <span class="c1">#check whether the port is open. Displays True in the BLACS device tab</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">is_open</span>
+        <span class="p">)</span>  <span class="c1"># check whether the port is open. Displays True in the BLACS device tab</span>
         <span class="n">ser</span><span class="o">.</span><span class="n">setRTS</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">ser</span><span class="o">.</span><span class="n">setDTR</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
         <span class="n">ser</span><span class="o">.</span><span class="n">setRTS</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">ser</span><span class="o">.</span><span class="n">setDTR</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">ser</span><span class="o">.</span><span class="n">reset_input_buffer</span><span class="p">();</span>
+        <span class="n">ser</span><span class="o">.</span><span class="n">reset_input_buffer</span><span class="p">()</span>
 
-        <span class="n">line</span> <span class="o">=</span> <span class="n">ser</span><span class="o">.</span><span class="n">readline</span><span class="p">();</span>
-        <span class="n">ard_str</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">];</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">ser</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+        <span class="n">ard_str</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">ard_str</span><span class="p">)</span></div>
 
     <span class="c1"># We don&#39;t use this method but it needs to be defined:</span>
@@ -86,14 +86,14 @@
 <div class="viewcode-block" id="YunTempWorker.transition_to_buffered"><a class="viewcode-back" href="../../YunTemp.html#YunTemp.blacs_workers.YunTempWorker.transition_to_buffered">[docs]</a>    <span class="k">def</span> <span class="nf">transition_to_buffered</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device_name</span><span class="p">,</span> <span class="n">h5_file</span><span class="p">,</span> <span class="n">initial_values</span><span class="p">,</span> <span class="n">fresh</span><span class="p">):</span>
         <span class="c1"># Read commands from the shot file and send them to the device</span>
 
-        <span class="c1">#this is when the hardware communication begins. It&#39;s important to reset the arduino here.</span>
+        <span class="c1"># this is when the hardware communication begins. It&#39;s important to reset the arduino here.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reset_connection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">shot_file</span> <span class="o">=</span> <span class="n">h5_file</span>
-        <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shot_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">group</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="n">f</span><span class="s1">&#39;devices/</span><span class="si">{self.device_name}</span><span class="s1">&#39;</span><span class="p">]</span>
-            <span class="k">if</span> <span class="s1">&#39;START_COMMANDS&#39;</span> <span class="ow">in</span> <span class="n">group</span><span class="p">:</span>
-                <span class="n">start_commands</span> <span class="o">=</span> <span class="n">group</span><span class="p">[</span><span class="s1">&#39;START_COMMANDS&#39;</span><span class="p">][:]</span>
+        <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shot_file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">group</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="n">f</span><span class="s2">&quot;devices/</span><span class="si">{self.device_name}</span><span class="s2">&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s2">&quot;START_COMMANDS&quot;</span> <span class="ow">in</span> <span class="n">group</span><span class="p">:</span>
+                <span class="n">start_commands</span> <span class="o">=</span> <span class="n">group</span><span class="p">[</span><span class="s2">&quot;START_COMMANDS&quot;</span><span class="p">][:]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">start_commands</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="c1"># It is polite to close the shot file (by exiting the &#39;with&#39; block) before</span>
@@ -103,22 +103,22 @@
             <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;sending command: {repr(command)}&quot;</span><span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
-            <span class="c1">#self.connection.flush()</span>
+            <span class="c1"># self.connection.flush()</span>
             <span class="c1"># this command is written in Experiment.py, which is fetched here and actually written onto the arduino</span>
-            <span class="c1">#you will see this in the BLACS device tab. It&#39;s nothing but the string that we should send to the arduino</span>
-            <span class="c1">#inorder to control the DDS</span>
+            <span class="c1"># you will see this in the BLACS device tab. It&#39;s nothing but the string that we should send to the arduino</span>
+            <span class="c1"># inorder to control the DDS</span>
 
         <span class="c1"># This is expected by BLACS, we should return the final values that numerical</span>
         <span class="c1"># channels have from th shot - for us we have no channels so this is an empty</span>
         <span class="c1"># dictionary</span>
-        <span class="k">return</span><span class="p">{}</span></div>
+        <span class="k">return</span> <span class="p">{}</span></div>
 
 <div class="viewcode-block" id="YunTempWorker.transition_to_manual"><a class="viewcode-back" href="../../YunTemp.html#YunTemp.blacs_workers.YunTempWorker.transition_to_manual">[docs]</a>    <span class="k">def</span> <span class="nf">transition_to_manual</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Read commands from the shot file and send them to the device</span>
-        <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shot_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">group</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="n">f</span><span class="s1">&#39;devices/</span><span class="si">{self.device_name}</span><span class="s1">&#39;</span><span class="p">]</span>
-            <span class="k">if</span> <span class="s1">&#39;STOP_COMMANDS&#39;</span> <span class="ow">in</span> <span class="n">group</span><span class="p">:</span>
-                <span class="n">stop_commands</span> <span class="o">=</span> <span class="n">group</span><span class="p">[</span><span class="s1">&#39;STOP_COMMANDS&#39;</span><span class="p">][:]</span>
+        <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shot_file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">group</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="n">f</span><span class="s2">&quot;devices/</span><span class="si">{self.device_name}</span><span class="s2">&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s2">&quot;STOP_COMMANDS&quot;</span> <span class="ow">in</span> <span class="n">group</span><span class="p">:</span>
+                <span class="n">stop_commands</span> <span class="o">=</span> <span class="n">group</span><span class="p">[</span><span class="s2">&quot;STOP_COMMANDS&quot;</span><span class="p">][:]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">stop_commands</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">for</span> <span class="n">command</span> <span class="ow">in</span> <span class="n">stop_commands</span><span class="p">:</span>
@@ -147,7 +147,7 @@
         <span class="c1"># False.</span>
         <span class="c1"># Forget the shot file:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">shot_file</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">return</span> <span class="kc">True</span> <span class="c1"># Indicates success</span></div></div>
+        <span class="k">return</span> <span class="kc">True</span>  <span class="c1"># Indicates success</span></div></div>
 </pre></div>
 
           </div>

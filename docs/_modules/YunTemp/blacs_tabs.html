@@ -35,28 +35,29 @@
   <h1>Source code for YunTemp.blacs_tabs</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">blacs.device_base_class</span> <span class="k">import</span> <span class="n">DeviceTab</span>
 
+
 <div class="viewcode-block" id="YunTempTab"><a class="viewcode-back" href="../../YunTemp.html#YunTemp.blacs_tabs.YunTempTab">[docs]</a><span class="k">class</span> <span class="nc">YunTempTab</span><span class="p">(</span><span class="n">DeviceTab</span><span class="p">):</span>
 <div class="viewcode-block" id="YunTempTab.initialise_workers"><a class="viewcode-back" href="../../YunTemp.html#YunTemp.blacs_tabs.YunTempTab.initialise_workers">[docs]</a>    <span class="k">def</span> <span class="nf">initialise_workers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
         <span class="c1">#  create the layout of the widgets</span>
-        <span class="n">dds_widgets</span><span class="p">,</span><span class="n">ao_widgets</span><span class="p">,</span><span class="n">do_widgets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auto_create_widgets</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">auto_place_widgets</span><span class="p">(</span><span class="n">dds_widgets</span><span class="p">,</span><span class="n">do_widgets</span><span class="p">)</span>
+        <span class="n">dds_widgets</span><span class="p">,</span> <span class="n">ao_widgets</span><span class="p">,</span> <span class="n">do_widgets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auto_create_widgets</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">auto_place_widgets</span><span class="p">(</span><span class="n">dds_widgets</span><span class="p">,</span> <span class="n">do_widgets</span><span class="p">)</span>
 
         <span class="c1"># Look up the COM port and baud rate in the connection table:</span>
-        <span class="n">connection_table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="s1">&#39;connection_table&#39;</span><span class="p">]</span>
+        <span class="n">connection_table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="s2">&quot;connection_table&quot;</span><span class="p">]</span>
         <span class="n">device</span> <span class="o">=</span> <span class="n">connection_table</span><span class="o">.</span><span class="n">find_by_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device_name</span><span class="p">)</span>
 
-        <span class="n">com_port</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s1">&#39;com_port&#39;</span><span class="p">]</span>
-        <span class="n">baud_rate</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s1">&#39;baud_rate&#39;</span><span class="p">]</span>
+        <span class="n">com_port</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s2">&quot;com_port&quot;</span><span class="p">]</span>
+        <span class="n">baud_rate</span> <span class="o">=</span> <span class="n">device</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s2">&quot;baud_rate&quot;</span><span class="p">]</span>
 
         <span class="c1"># Start a worker process with our worker class, and pass it the com port and</span>
         <span class="c1"># baud rate, which it will need:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">create_worker</span><span class="p">(</span>
-            <span class="s1">&#39;main_worker&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;user_devices.YunTemp.blacs_workers.YunTempWorker&#39;</span><span class="p">,</span>
-            <span class="p">{</span><span class="s1">&#39;com_port&#39;</span><span class="p">:</span> <span class="n">com_port</span><span class="p">,</span> <span class="s1">&#39;baud_rate&#39;</span><span class="p">:</span> <span class="n">baud_rate</span><span class="p">},</span>
+            <span class="s2">&quot;main_worker&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;user_devices.YunTemp.blacs_workers.YunTempWorker&quot;</span><span class="p">,</span>
+            <span class="p">{</span><span class="s2">&quot;com_port&quot;</span><span class="p">:</span> <span class="n">com_port</span><span class="p">,</span> <span class="s2">&quot;baud_rate&quot;</span><span class="p">:</span> <span class="n">baud_rate</span><span class="p">},</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">primary_worker</span> <span class="o">=</span> <span class="s1">&#39;main_worker&#39;</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">primary_worker</span> <span class="o">=</span> <span class="s2">&quot;main_worker&quot;</span></div></div>
 </pre></div>
 
           </div>
