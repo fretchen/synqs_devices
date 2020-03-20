@@ -39,10 +39,24 @@
 </div>
 <div class="section" id="module-YunTemp.blacs_tabs">
 <span id="yuntemp-blacs-tabs-module"></span><h2>YunTemp.blacs_tabs module<a class="headerlink" href="#module-YunTemp.blacs_tabs" title="Permalink to this headline">¶</a></h2>
+<p>The file that generates the GUI for the YunTemp.</p>
 <dl class="class">
 <dt id="YunTemp.blacs_tabs.YunTempTab">
 <em class="property">class </em><code class="descclassname">YunTemp.blacs_tabs.</code><code class="descname">YunTempTab</code><span class="sig-paren">(</span><em>notebook</em>, <em>settings</em>, <em>restart=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/YunTemp/blacs_tabs.html#YunTempTab"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#YunTemp.blacs_tabs.YunTempTab" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">blacs.device_base_class.DeviceTab</span></code></p>
+<p>The class behind the GUI. It inherits from DeviceTab.</p>
+<dl class="attribute">
+<dt id="YunTemp.blacs_tabs.YunTempTab.settings">
+<code class="descname">settings</code><a class="headerlink" href="#YunTemp.blacs_tabs.YunTempTab.settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Not sure here.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="YunTemp.blacs_tabs.YunTempTab.worker">
+<code class="descname">worker</code><a class="headerlink" href="#YunTemp.blacs_tabs.YunTempTab.worker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Not sure here.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="YunTemp.blacs_tabs.YunTempTab.initialise_workers">
 <code class="descname">initialise_workers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/YunTemp/blacs_tabs.html#YunTempTab.initialise_workers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#YunTemp.blacs_tabs.YunTempTab.initialise_workers" title="Permalink to this definition">¶</a></dt>
@@ -70,7 +84,20 @@
 <dl class="method">
 <dt id="YunTemp.blacs_workers.YunTempWorker.program_manual">
 <code class="descname">program_manual</code><span class="sig-paren">(</span><em>values</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/YunTemp/blacs_workers.html#YunTempWorker.program_manual"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#YunTemp.blacs_workers.YunTempWorker.program_manual" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Connects to the next available port.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>minimum</strong> – A port value greater or equal to 1024.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The new minimum port.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ConnectionError" title="(in Python v3.8)"><code class="xref py py-exc docutils literal notranslate"><span class="pre">ConnectionError</span></code></a> – If no available port is found.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="YunTemp.blacs_workers.YunTempWorker.reset_connection">
@@ -106,9 +133,14 @@ to be written for the ramps displays ‘Arduino ready’, which is displayed in 
 </div>
 <div class="section" id="module-YunTemp.register_classes">
 <span id="yuntemp-register-classes-module"></span><h2>YunTemp.register_classes module<a class="headerlink" href="#module-YunTemp.register_classes" title="Permalink to this headline">¶</a></h2>
+<p>Register the YunTemp to blacs.</p>
+<p>This is boilerplate and should be only minimally changed.</p>
 </div>
 <div class="section" id="module-YunTemp">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-YunTemp" title="Permalink to this headline">¶</a></h2>
+<p>The temperature control module based on the Arduino Yun.</p>
+<p>Typical usage example:</p>
+<p>YunTemp(name=”temp_control_0”)</p>
 </div>
 </div>
 

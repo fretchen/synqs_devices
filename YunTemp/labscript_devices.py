@@ -1,16 +1,7 @@
-#####################################################################
-#                                                                   #
-# /user_devices/YunTemp/labscript_devices.py               #
-#                                                                   #
-# Copyright 2019, Monash University and contributors                #
-#                                                                   #
-# This file is part of labscript_devices, in the labscript suite    #
-# (see http://labscriptsuite.org), and is licensed under the        #
-# Simplified BSD License. See the license.txt file in the root of   #
-# the project for the full license.                                 #
-#                                                                   #
-#####################################################################
+"""The module to access the YunTemp within the shots.
 
+The YunTemp exposes the properties of temperature control.
+"""
 from labscript import Device, set_passed_properties
 
 

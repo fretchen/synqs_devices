@@ -1,7 +1,18 @@
+"""The file that generates the GUI for the YunTemp.
+
+"""
+
 from blacs.device_base_class import DeviceTab
 
 
 class YunTempTab(DeviceTab):
+    """The class behind the GUI. It inherits from DeviceTab.
+
+
+    Attributes:
+        settings: Not sure here.
+        worker: Not sure here.
+    """
     def initialise_workers(self):
 
         #  create the layout of the widgets

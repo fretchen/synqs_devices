@@ -46,6 +46,17 @@ class YunTempWorker(Worker):
 
     # We don't use this method but it needs to be defined:
     def program_manual(self, values):
+        """Connects to the next available port.
+
+        Args:
+            minimum: A port value greater or equal to 1024.
+
+        Returns:
+            The new minimum port.
+
+        Raises:
+            ConnectionError: If no available port is found.
+        """
         return {}
 
     def transition_to_buffered(self, device_name, h5_file, initial_values, fresh):

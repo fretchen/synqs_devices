@@ -81,6 +81,17 @@
 
     <span class="c1"># We don&#39;t use this method but it needs to be defined:</span>
 <div class="viewcode-block" id="YunTempWorker.program_manual"><a class="viewcode-back" href="../../YunTemp.html#YunTemp.blacs_workers.YunTempWorker.program_manual">[docs]</a>    <span class="k">def</span> <span class="nf">program_manual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Connects to the next available port.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            minimum: A port value greater or equal to 1024.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The new minimum port.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ConnectionError: If no available port is found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">{}</span></div>
 
 <div class="viewcode-block" id="YunTempWorker.transition_to_buffered"><a class="viewcode-back" href="../../YunTemp.html#YunTemp.blacs_workers.YunTempWorker.transition_to_buffered">[docs]</a>    <span class="k">def</span> <span class="nf">transition_to_buffered</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device_name</span><span class="p">,</span> <span class="n">h5_file</span><span class="p">,</span> <span class="n">initial_values</span><span class="p">,</span> <span class="n">fresh</span><span class="p">):</span>
