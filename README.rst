@@ -1,4 +1,5 @@
-# SynQS_devices
+SynQS_devices
+=============
 
  [Labscript](https://groups.google.com/forum/?nomobile=true#!forum/labscriptsuite) devices as used at [SynQS](https://www.kip.uni-heidelberg.de/synqs/).
 
@@ -220,5 +221,5 @@ We now have some serial device
 to add the new device to the documentation you should run within docs
 
 ```
-sphinx-apidoc -o source/ ../<package-name>  
+sphinx-apidoc -o source/ ../<package-name>
 ```

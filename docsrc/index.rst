@@ -5,6 +5,7 @@ Welcome to Synqs Devices's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   readme
    modules
 
 Indices and tables
