@@ -1,4 +1,8 @@
 # SynQS_devices
+
+[![Documentation Status](https://readthedocs.org/projects/synqs-devices/badge/?version=latest)](https://synqs-devices.readthedocs.io/en/latest/?badge=latest)
+
+
  [Labscript](https://groups.google.com/forum/?nomobile=true#!forum/labscriptsuite) devices as used at [SynQS](https://www.kip.uni-heidelberg.de/synqs/).
 
  Devices include:
