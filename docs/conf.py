@@ -64,8 +64,6 @@ autodoc_default_options = {
 		"exclude-members":''
 }
 
-needs_sphinx = '2.2'
-
 add_module_names = True
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
