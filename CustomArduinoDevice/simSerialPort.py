@@ -1,8 +1,19 @@
+"""Simulate the serial port for the CustomArduinoDevice.
+
+Sometimes you do not have the real Arduino at hand. So here, we just simulate its
+response for simpler testing remotely.
+"""
+
 import os, pty
 import time
 import numpy as np
 
 def test_serial():
+    """The function that initializes the serial port.
+
+    Returns:
+        Nothing really. Just sets things up.
+    """
     setpoint  = 750;
     master, slave = pty.openpty()
     s_name = os.ttyname(slave)
@@ -27,6 +38,6 @@ def test_serial():
                 setpoint = int(set.decode('windows-1252'));
                 print('s{}'.format(setpoint));
         time.sleep(0.1)
-        
+
 if __name__=='__main__':
     test_serial()

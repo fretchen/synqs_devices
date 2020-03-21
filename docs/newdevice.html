@@ -169,7 +169,11 @@ It then contains:</p>
 </div>
 <div class="section" id="establishing-a-serial-communication">
 <h2>Establishing a serial communication<a class="headerlink" href="#establishing-a-serial-communication" title="Permalink to this headline">¶</a></h2>
-<p>In a next step we have to give the whole thing some live. Which means that we already have to establish a serial connection with the arduino. If you have an arduino around and know on which port it lives you can skip this step. Otherwise, we will explain here how you can simulate such a serial port. For that we simply create a file simSerialPort.py in the folder /userlib/pythonlib/ of your #labscript installation. The file reads then:</p>
+<p>In a next step we have to give the whole thing some live. Which means that we already
+have to establish a serial connection with the arduino. If you have an arduino around and
+know on which port it lives you can skip this step. Otherwise, we will explain here how you
+can simulate such a serial port. For that we simply create a file simSerialPort.py in the folder
+/userlib/pythonlib/ of your #labscript installation. The file reads then:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">pty</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
