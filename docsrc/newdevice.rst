@@ -139,7 +139,11 @@ without any errors. Only an empty useless widget should be present for the momen
 Establishing a serial communication
 -----------------------------------
 
-In a next step we have to give the whole thing some live. Which means that we already have to establish a serial connection with the arduino. If you have an arduino around and know on which port it lives you can skip this step. Otherwise, we will explain here how you can simulate such a serial port. For that we simply create a file simSerialPort.py in the folder /userlib/pythonlib/ of your #labscript installation. The file reads then:
+In a next step we have to give the whole thing some live. Which means that we already
+have to establish a serial connection with the arduino. If you have an arduino around and
+know on which port it lives you can skip this step. Otherwise, we will explain here how you
+can simulate such a serial port. For that we simply create a file simSerialPort.py in the folder 
+/userlib/pythonlib/ of your #labscript installation. The file reads then:
 ::
 
     import os, pty

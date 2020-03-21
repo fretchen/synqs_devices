@@ -7,7 +7,7 @@ from labscript import *
 
 from user_devices.YunTemp.labscript_devices import YunTemp
 
-YunTemp(name="temp_control_0")
+YunTemp(name="temp_control_0", com_port="/dev/ttys004" )
 
 start()
 stop(1)
