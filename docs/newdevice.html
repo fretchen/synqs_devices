@@ -54,115 +54,107 @@ Creating a compilable boilerplate
 <ul class="simple">
 <li><p>I then added the following header:</p></li>
 </ul>
-<dl>
-<dt><a href="#id1"><span class="problematic" id="id2">``</span></a>` python</dt><dd><p>from labscript import IntermediateDevice</p>
-<p>from blacs.device_base_class import DeviceTab
-from blacs.tab_base_classes import Worker</p>
-<p>from labscript_devices import BLACS_tab, BLACS_worker</p>
-</dd>
-</dl>
-<p><a href="#id3"><span class="problematic" id="id4">``</span></a><a href="#id5"><span class="problematic" id="id6">`</span></a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">labscript</span> <span class="kn">import</span> <span class="n">IntermediateDevice</span>
+
+<span class="kn">from</span> <span class="nn">blacs.device_base_class</span> <span class="kn">import</span> <span class="n">DeviceTab</span>
+<span class="kn">from</span> <span class="nn">blacs.tab_base_classes</span> <span class="kn">import</span> <span class="n">Worker</span>
+
+<span class="kn">from</span> <span class="nn">labscript_devices</span> <span class="kn">import</span> <span class="n">BLACS_tab</span><span class="p">,</span> <span class="n">BLACS_worker</span>
+</pre></div>
+</div>
 <ul class="simple">
 <li><p>The first step is to actually define some dummy device now. We then will most likely not create a pseudoclock, which means that we will make the device an IntermediateDevice.</p></li>
 </ul>
-<dl>
-<dt><a href="#id7"><span class="problematic" id="id8">``</span></a>` python</dt><dd><dl>
-<dt>class ArduinoUno(IntermediateDevice):</dt><dd><p># A human readable name for device model used in error messages
-description = ‘Arduino Uno’</p>
-<p># The maximum update rate of this device (in Hz)
-clock_limit = 100</p>
-<dl>
-<dt>def __init__(self, name, parent_device, com_port = “”, baud_rate= 115200):</dt><dd><p>IntermediateDevice.__init__(self, name, parent_device)
-self.BLACS_connection = ‘%s,%s’%(com_port , str(baud_rate))</p>
-</dd>
-<dt>def generate_code(self, hdf5_file):</dt><dd><p># Run the labscript suite base class method
-# (we assume inheritance from PseudoclockDevice here)
-# This generates instruction data for every child and
-# subsequent generation of children that is attached
-# to this device
-IntermediateDevice.generate_code(self, hdf5_file)</p>
-<p># Create the HDF5 group for storage of
-# device attributes and instructions
-group = self.init_device_group(hdf5_file)</p>
-<p># device specific code here …</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd>
-</dl>
-<p><a href="#id9"><span class="problematic" id="id10">``</span></a>`
-We then have to work on the specific control of the device, but this would seem like a minimal code.
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ArduinoUno</span><span class="p">(</span><span class="n">IntermediateDevice</span><span class="p">):</span>
+      <span class="c1"># A human readable name for device model used in error messages</span>
+      <span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;Arduino Uno&#39;</span>
+
+      <span class="c1"># The maximum update rate of this device (in Hz)</span>
+      <span class="n">clock_limit</span> <span class="o">=</span> <span class="mi">100</span>
+
+      <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">parent_device</span><span class="p">,</span> <span class="n">com_port</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">baud_rate</span><span class="o">=</span> <span class="mi">115200</span><span class="p">):</span>
+          <span class="n">IntermediateDevice</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">parent_device</span><span class="p">)</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">BLACS_connection</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">,</span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">com_port</span> <span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">baud_rate</span><span class="p">))</span>
+
+      <span class="k">def</span> <span class="nf">generate_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hdf5_file</span><span class="p">):</span>
+          <span class="c1"># Run the labscript suite base class method</span>
+          <span class="c1"># (we assume inheritance from PseudoclockDevice here)</span>
+          <span class="c1"># This generates instruction data for every child and</span>
+          <span class="c1"># subsequent generation of children that is attached</span>
+          <span class="c1"># to this device</span>
+          <span class="n">IntermediateDevice</span><span class="o">.</span><span class="n">generate_code</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hdf5_file</span><span class="p">)</span>
+
+          <span class="c1"># Create the HDF5 group for storage of</span>
+          <span class="c1"># device attributes and instructions</span>
+          <span class="n">group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_device_group</span><span class="p">(</span><span class="n">hdf5_file</span><span class="p">)</span>
+
+          <span class="c1"># device specific code here ...</span>
+</pre></div>
+</div>
+<p>We then have to work on the specific control of the device, but this would seem like a minimal code.
 The next step is to set up the GUI in BLACS through the DeviceTab class.</p>
-<dl>
-<dt><a href="#id11"><span class="problematic" id="id12">``</span></a><a href="#id13"><span class="problematic" id="id14">`</span></a>python</dt><dd><p>&#64;BLACS_tab
-class ArduinoUnoTab(DeviceTab):</p>
-<blockquote>
-<div><p>def initialise_GUI(self):</p>
-<blockquote>
-<div><p>#  create the layout of the widgets
-dds_widgets,ao_widgets,do_widgets = self.auto_create_widgets()
-self.auto_place_widgets(dds_widgets,do_widgets)</p>
-<p># Create and set the primary worker
-# the last ingredient are the parameters for the worker
-self.create_worker(“main_worker”,ArduinoUnoWorker,{})
-self.primary_worker = “main_worker”</p>
-<p># Set the capabilities of this device
-self.supports_remote_value_check(False)
-self.supports_smart_programming(False)</p>
-</div></blockquote>
-</div></blockquote>
-</dd>
-</dl>
-<p><a href="#id15"><span class="problematic" id="id16">``</span></a><a href="#id17"><span class="problematic" id="id18">`</span></a></p>
-<p>Finally, we have to create a worker that will make the contact between the GUI and the Hardware itself.
-<a href="#id19"><span class="problematic" id="id20">``</span></a><a href="#id21"><span class="problematic" id="id22">`</span></a>python</p>
-<blockquote>
-<div><dl class="simple">
-<dt>class ArduinoUnoWorker(Worker):</dt><dd><dl class="simple">
-<dt>def init(self):</dt><dd><p># Once off device initialisation code called when the
-# worker process is first started.
-# Usually this is used to create the connection to the
-# device and/or instantiate the API from the device
-# manufacturer
-pass</p>
-</dd>
-<dt>def shutdown(self):</dt><dd><p># Once off device shutdown code called when the
-# BLACS exits
-pass</p>
-</dd>
-<dt>def program_manual(self, front_panel_values):</dt><dd><p># Update the output state of each channel using the values
-# in front_panel_values (which takes the form of a
-# dictionary keyed by the channel names specified
-# BLACS GUI configuration
-# return a dictionary of coerced/quantised values
-# channel, keyed by the channel name (or an empty dictionary)
-return {}</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</div></blockquote>
-<p><a href="#id23"><span class="problematic" id="id24">``</span></a>`
-We have now setup the full the ArduinoUno.py file.</p>
-<p>## Create the GUI</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@BLACS_tab</span>
+<span class="k">class</span> <span class="nc">ArduinoUnoTab</span><span class="p">(</span><span class="n">DeviceTab</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">initialise_GUI</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="c1">#  create the layout of the widgets</span>
+        <span class="n">dds_widgets</span><span class="p">,</span><span class="n">ao_widgets</span><span class="p">,</span><span class="n">do_widgets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auto_create_widgets</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">auto_place_widgets</span><span class="p">(</span><span class="n">dds_widgets</span><span class="p">,</span><span class="n">do_widgets</span><span class="p">)</span>
+
+        <span class="c1"># Create and set the primary worker</span>
+        <span class="c1"># the last ingredient are the parameters for the worker</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_worker</span><span class="p">(</span><span class="s2">&quot;main_worker&quot;</span><span class="p">,</span><span class="n">ArduinoUnoWorker</span><span class="p">,{})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">primary_worker</span> <span class="o">=</span> <span class="s2">&quot;main_worker&quot;</span>
+
+        <span class="c1"># Set the capabilities of this device</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">supports_remote_value_check</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">supports_smart_programming</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Finally, we have to create a worker that will make the contact between the GUI and the Hardware itself.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ArduinoUnoWorker</span><span class="p">(</span><span class="n">Worker</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Once off device initialisation code called when the</span>
+        <span class="c1"># worker process is first started.</span>
+        <span class="c1"># Usually this is used to create the connection to the</span>
+        <span class="c1"># device and/or instantiate the API from the device</span>
+        <span class="c1"># manufacturer</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Once off device shutdown code called when the</span>
+        <span class="c1"># BLACS exits</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">program_manual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">front_panel_values</span><span class="p">):</span>
+        <span class="c1"># Update the output state of each channel using the values</span>
+        <span class="c1"># in front_panel_values (which takes the form of a</span>
+        <span class="c1"># dictionary keyed by the channel names specified</span>
+        <span class="c1"># BLACS GUI configuration</span>
+        <span class="c1"># return a dictionary of coerced/quantised values</span>
+        <span class="c1"># channel, keyed by the channel name (or an empty dictionary)</span>
+        <span class="k">return</span> <span class="p">{}</span>
+</pre></div>
+</div>
+<p>We have now setup the full the ArduinoUno.py file.</p>
+<div class="section" id="create-the-gui">
+<h2>Create the GUI<a class="headerlink" href="#create-the-gui" title="Permalink to this headline">¶</a></h2>
 <p>The next step is to bind it into the GUI. So we  create file, which we call connectiontable.py.
 And we save it in the folder userlib/labscriptlib/my_pc/
-It then contains:
-<a href="#id25"><span class="problematic" id="id26">``</span></a><a href="#id27"><span class="problematic" id="id28">`</span></a>python</p>
-<blockquote>
-<div><p>from labscript import *</p>
-<p>from labscript_devices.ArduinoUno import ArduinoUno
-from labscript_devices.DummyPseudoclock.labscript_device import DummyPseudoclock</p>
-<p>DummyPseudoclock(name=’clock_0’)
-ArduinoUno(name=’arduino_0’, parent_device=clock_0.clockline)</p>
-<dl class="simple">
-<dt>if __name__ == ‘__main__’:</dt><dd><p>start()
-stop(1)</p>
-</dd>
-</dl>
-</div></blockquote>
-<p><a href="#id29"><span class="problematic" id="id30">``</span></a><a href="#id31"><span class="problematic" id="id32">`</span></a></p>
+It then contains:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">labscript</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="kn">from</span> <span class="nn">labscript_devices.ArduinoUno</span> <span class="kn">import</span> <span class="n">ArduinoUno</span>
+<span class="kn">from</span> <span class="nn">labscript_devices.DummyPseudoclock.labscript_device</span> <span class="kn">import</span> <span class="n">DummyPseudoclock</span>
+
+<span class="n">DummyPseudoclock</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;clock_0&#39;</span><span class="p">)</span>
+<span class="n">ArduinoUno</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;arduino_0&#39;</span><span class="p">,</span> <span class="n">parent_device</span><span class="o">=</span><span class="n">clock_0</span><span class="o">.</span><span class="n">clockline</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">start</span><span class="p">()</span>
+    <span class="n">stop</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
 <ul class="simple">
 <li><p>The next step is to run this script in [runmanager](<a class="reference external" href="https://github.com/labscript-suite/runmanager">https://github.com/labscript-suite/runmanager</a>) as this creates the necessary h5 file for #blacs.</p></li>
 <li><p>So once we have run it in #runmanager it should have compiled without error you should find the file DATE_connectiontable_arduino_0.h5 .</p></li>
@@ -174,63 +166,57 @@ stop(1)</p>
 </li>
 </ul>
 <p>without any errors. Only an empty useless widget should be present for the moment.</p>
-<p>## Establishing a serial communication</p>
-<p>In a next step we have to give the whole thing some live. Which means that we already have to establish a serial connection with the arduino</p>
-<p>## Simulating a serial port</p>
-<p>If you have an arduino around and know on which port it lives you can skip this step. Otherwise, we will explain here how you can simulate such a serial port. For that we simply create a file simSerialPort.py in the folder /userlib/pythonlib/ of your #labscript installation. The file reads then:</p>
-<blockquote>
-<div><p>import os, pty
-import time
-import numpy as np</p>
-<dl>
-<dt>def test_serial():</dt><dd><p>setpoint  = 750;
-master, slave = pty.openpty()
-s_name = os.ttyname(slave)
-print(s_name)
-while True:</p>
-<blockquote>
-<div><p>meas = np.random.randint(700, 800)
-err = setpoint - meas;
-control = np.random.randint(10)
-gain =1
-tauI = 100
-tauD = 1
-mode = os.read(master, 1);
-if mode:</p>
-<blockquote>
-<div><p>print(‘mode {}’.format(mode))
-if mode == b’w’:</p>
-<blockquote>
-<div><p>ard_str = str(setpoint) + ‘,’ + str(meas) + ‘,’ + str(err) + ‘,’ + str(control)
-ard_str = ard_str + ‘,’ + str(gain) + ‘,’ + str(tauI) +’,’ + str(tauD) + ‘rn’
-out = ard_str.encode(‘windows-1252’)
-os.write(master, out)</p>
-</div></blockquote>
-<dl class="simple">
-<dt>if mode == b’s’:</dt><dd><p>set = os.read(master, 20);
-setpoint = int(set.decode(‘windows-1252’));
-print(‘s{}’.format(setpoint));</p>
-</dd>
-</dl>
-</div></blockquote>
-<p>time.sleep(0.1)</p>
-</div></blockquote>
-</dd>
-<dt>if __name__==’__main__’:</dt><dd><p>test_serial()</p>
-</dd>
-</dl>
-</div></blockquote>
+</div>
+<div class="section" id="establishing-a-serial-communication">
+<h2>Establishing a serial communication<a class="headerlink" href="#establishing-a-serial-communication" title="Permalink to this headline">¶</a></h2>
+<p>In a next step we have to give the whole thing some live. Which means that we already have to establish a serial connection with the arduino. If you have an arduino around and know on which port it lives you can skip this step. Otherwise, we will explain here how you can simulate such a serial port. For that we simply create a file simSerialPort.py in the folder /userlib/pythonlib/ of your #labscript installation. The file reads then:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">pty</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="k">def</span> <span class="nf">test_serial</span><span class="p">():</span>
+    <span class="n">setpoint</span>  <span class="o">=</span> <span class="mi">750</span><span class="p">;</span>
+    <span class="n">master</span><span class="p">,</span> <span class="n">slave</span> <span class="o">=</span> <span class="n">pty</span><span class="o">.</span><span class="n">openpty</span><span class="p">()</span>
+    <span class="n">s_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">ttyname</span><span class="p">(</span><span class="n">slave</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">s_name</span><span class="p">)</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">meas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">700</span><span class="p">,</span> <span class="mi">800</span><span class="p">)</span>
+        <span class="n">err</span> <span class="o">=</span> <span class="n">setpoint</span> <span class="o">-</span> <span class="n">meas</span><span class="p">;</span>
+        <span class="n">control</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">gain</span> <span class="o">=</span><span class="mi">1</span>
+        <span class="n">tauI</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="n">tauD</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">mode</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">master</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+        <span class="k">if</span> <span class="n">mode</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;mode </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mode</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="sa">b</span><span class="s1">&#39;w&#39;</span><span class="p">:</span>
+                <span class="n">ard_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">setpoint</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">meas</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">control</span><span class="p">)</span>
+                <span class="n">ard_str</span> <span class="o">=</span> <span class="n">ard_str</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">gain</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">tauI</span><span class="p">)</span> <span class="o">+</span><span class="s1">&#39;,&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">tauD</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span>
+                <span class="n">out</span> <span class="o">=</span> <span class="n">ard_str</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;windows-1252&#39;</span><span class="p">)</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">master</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="sa">b</span><span class="s1">&#39;s&#39;</span><span class="p">:</span>
+                <span class="nb">set</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">master</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
+                <span class="n">setpoint</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">set</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;windows-1252&#39;</span><span class="p">));</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;s</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">setpoint</span><span class="p">));</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="k">if</span> <span class="vm">__name__</span><span class="o">==</span><span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">test_serial</span><span class="p">()</span>
+</pre></div>
+</div>
 <p>This program basically emulates the behavior of an arduino used for temperature control. We can start it in the shell through (being in the right directory):</p>
-<blockquote>
-<div><p>python simSerialPort.py</p>
-</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">simSerialPort</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
 <p>It will answer at the beginning with a single output, which will read something like this:</p>
-<blockquote>
-<div><p>/dev/ttys004</p>
-</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">ttys004</span>
+</pre></div>
+</div>
 <p>This is now the serial port on which #blacs can look for the Arduino.</p>
-<p>## Setting up a basic user interface</p>
+</div>
+<div class="section" id="setting-up-a-basic-user-interface">
+<h2>Setting up a basic user interface<a class="headerlink" href="#setting-up-a-basic-user-interface" title="Permalink to this headline">¶</a></h2>
 <p>We now have some serial device</p>
+</div>
 </div>
 
 
@@ -253,7 +239,12 @@ print(‘s{}’.format(setpoint));</p>
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="readme.html">SynQS_devices</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Create a new device</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Create a new device</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#create-the-gui">Create the GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#establishing-a-serial-communication">Establishing a serial communication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#setting-up-a-basic-user-interface">Setting up a basic user interface</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">user_devices</a></li>
 </ul>
 

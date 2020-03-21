@@ -20,20 +20,19 @@ Creating a compilable boilerplate
 - So let me start out with creating ArduinoUno.py in the folder labscript_devices.
 
 - I then added the following header:
+::
 
-``` python
     from labscript import IntermediateDevice
 
     from blacs.device_base_class import DeviceTab
     from blacs.tab_base_classes import Worker
 
     from labscript_devices import BLACS_tab, BLACS_worker
-```
 
 - The first step is to actually define some dummy device now. We then will most likely not create a pseudoclock, which means that we will make the device an IntermediateDevice.
+::
 
-``` python
-    class ArduinoUno(IntermediateDevice):
+  class ArduinoUno(IntermediateDevice):
         # A human readable name for device model used in error messages
         description = 'Arduino Uno'
 
@@ -57,11 +56,11 @@ Creating a compilable boilerplate
             group = self.init_device_group(hdf5_file)
 
             # device specific code here ...
-```
+
 We then have to work on the specific control of the device, but this would seem like a minimal code.
 The next step is to set up the GUI in BLACS through the DeviceTab class.
+::
 
-```python
     @BLACS_tab
     class ArduinoUnoTab(DeviceTab):
         def initialise_GUI(self):
@@ -78,10 +77,11 @@ The next step is to set up the GUI in BLACS through the DeviceTab class.
             # Set the capabilities of this device
             self.supports_remote_value_check(False)
             self.supports_smart_programming(False)
-```
+
 
 Finally, we have to create a worker that will make the contact between the GUI and the Hardware itself.
-```python
+::
+
     class ArduinoUnoWorker(Worker):
         def init(self):
             # Once off device initialisation code called when the
@@ -104,15 +104,17 @@ Finally, we have to create a worker that will make the contact between the GUI a
             # return a dictionary of coerced/quantised values
             # channel, keyed by the channel name (or an empty dictionary)
             return {}
-```
+
 We have now setup the full the ArduinoUno.py file.
 
-## Create the GUI
+Create the GUI
+--------------
 
 The next step is to bind it into the GUI. So we  create file, which we call connectiontable.py.
 And we save it in the folder userlib/labscriptlib/my_pc/
 It then contains:
-```python
+::
+
     from labscript import *
 
     from labscript_devices.ArduinoUno import ArduinoUno
@@ -124,7 +126,6 @@ It then contains:
     if __name__ == '__main__':
         start()
         stop(1)
-```
 
 
 - The next step is to run this script in [runmanager](https://github.com/labscript-suite/runmanager) as this creates the necessary h5 file for #blacs.
@@ -135,13 +136,11 @@ It then contains:
 
 without any errors. Only an empty useless widget should be present for the moment.
 
-## Establishing a serial communication
+Establishing a serial communication
+-----------------------------------
 
-In a next step we have to give the whole thing some live. Which means that we already have to establish a serial connection with the arduino
-
-## Simulating a serial port
-
-If you have an arduino around and know on which port it lives you can skip this step. Otherwise, we will explain here how you can simulate such a serial port. For that we simply create a file simSerialPort.py in the folder /userlib/pythonlib/ of your #labscript installation. The file reads then:
+In a next step we have to give the whole thing some live. Which means that we already have to establish a serial connection with the arduino. If you have an arduino around and know on which port it lives you can skip this step. Otherwise, we will explain here how you can simulate such a serial port. For that we simply create a file simSerialPort.py in the folder /userlib/pythonlib/ of your #labscript installation. The file reads then:
+::
 
     import os, pty
     import time
@@ -176,15 +175,18 @@ If you have an arduino around and know on which port it lives you can skip this 
         test_serial()
 
 This program basically emulates the behavior of an arduino used for temperature control. We can start it in the shell through (being in the right directory):
+::
 
     python simSerialPort.py
 
 It will answer at the beginning with a single output, which will read something like this:
+::
 
     /dev/ttys004
 
 This is now the serial port on which #blacs can look for the Arduino.
 
-## Setting up a basic user interface
+Setting up a basic user interface
+---------------------------------
 
 We now have some serial device
