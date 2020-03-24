@@ -169,16 +169,18 @@ class YunTempWorker(Worker):
         """ This is called if transition_to_buffered fails with an exception or returns False.
 
         Returns:
-        True, which indicates success.
+            True, which indicates success.
         """
         # Forget the shot file:
         self.shot_file = None
         return True  # Indicates success
 
     def check_remote_values(self):
-        """ Called when remote values are checked
+        """ Called when remote values are checked.
 
-        Returns: dictionary of remote values, keyed by hardware channel name.
+
+        Returns:
+            dictionary of remote values, keyed by hardware channel name.
         """
         current_output_values = {}
         # read from the device, the values it is outputting

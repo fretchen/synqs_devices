@@ -67,6 +67,17 @@ class CustomArduinoDeviceWorker(Worker):
         ard_str = line[0:-2]
         print(ard_str)
 
+    def check_remote_values(self):
+        """Queries device for current output settings.
+
+        Not sure about the details here.
+
+        Returns:
+            results as a dictionary to update the BLACS tab.
+        """
+        results = {}
+        return results
+
     # We don't use this method but it needs to be defined:
     def program_manual(self, values):
         """ Required - But a dummy we do not use.
