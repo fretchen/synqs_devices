@@ -20,7 +20,7 @@ class YunTempTab(DeviceTab):
         Returns:
             Nothing really. Just sets things up.
         """
-    # Capabilities
+        # Capabilities
         self.base_units =    {'freq':'Hz',               'phase':'Degrees'}
         self.base_min =      {'freq':200e3,              'phase':0}
         self.base_max =      {'freq':402.653183*10.0**6, 'phase':360}

@@ -6,7 +6,7 @@ from blacs.tab_base_classes import Worker
 
 
 class YunTempWorker(Worker):
-    def __init__(self):
+    def init(self):
         # Make a serial connection to the device. The com port and buad rate which
         # were passed to us from the BLACS tab are now available as instance attributes
         self.connection = serial.Serial(
@@ -33,17 +33,7 @@ class YunTempWorker(Worker):
         print(
             self.connection.is_open
         )  # check whether the port is open. Displays True in the BLACS device tab
-        ser.setRTS(True)
-        ser.setDTR(True)
-        time.sleep(0.1)
-        ser.setRTS(False)
-        ser.setDTR(False)
-        ser.reset_input_buffer()
-
-        line = ser.readline()
-        ard_str = line[0:-2]
-        print(ard_str)
-
+        
     # We don't use this method but it needs to be defined:
     def program_manual(self, values):
         """Connects to the next available port.
