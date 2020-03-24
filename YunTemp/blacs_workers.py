@@ -1,3 +1,7 @@
+"""
+This is where BLACS really connects to the hardware. Everything elso is just sending it here.
+"""
+
 import serial
 import time
 import labscript_utils.h5_lock
@@ -6,7 +10,20 @@ from blacs.tab_base_classes import Worker
 
 
 class YunTempWorker(Worker):
+    """The class behind the Worker. It inherits from Worker.
+
+
+    Attributes:
+        connection: Not sure here.
+        shot_file: Not sure here.
+    """
+
     def init(self):
+        """Initialize the Worker.
+
+        Initializes the serial port and resets everything properly.
+        """
+
         # Make a serial connection to the device. The com port and buad rate which
         # were passed to us from the BLACS tab are now available as instance attributes
         self.connection = serial.Serial(
@@ -26,31 +43,60 @@ class YunTempWorker(Worker):
 
     def reset_connection(self, ser):
 
-        """ this function, when called resets the arduino. Please be aware that the serial port should be open before you call this function.
+        """ Reset connection.
+
+        This function, when called resets the arduino. Please be aware that the serial port should be open before you call this function.
         It resets Arduino DUE, and clears everything in its input and reads fresh from the arduino. The arduino when ready for the string
         to be written for the ramps displays 'Arduino ready', which is displayed in the device in BLACS. If you don't see this, check your code.
+
+        Args:
+            ser: The serial connection to the Arduino.
+
+        Returns:
+            Nothing really.
         """
         print(
             self.connection.is_open
         )  # check whether the port is open. Displays True in the BLACS device tab
-        
+        # ser.setRTS(True)
+        # ser.setDTR(True)
+        # time.sleep(0.1)
+        # ser.setRTS(False)
+        # ser.setDTR(False)
+        # ser.reset_input_buffer()
+        #
+        # line = ser.readline()
+        # ard_str = line[0:-2]
+        # print(ard_str)
+
     # We don't use this method but it needs to be defined:
     def program_manual(self, values):
-        """Connects to the next available port.
+        """ Required - But a dummy we do not use.
+
+        Not sure how to do this one properly.
 
         Args:
-            minimum: A port value greater or equal to 1024.
+            values: Not sure here.
 
         Returns:
-            The new minimum port.
-
-        Raises:
-            ConnectionError: If no available port is found.
+            Empty dict.
         """
         return {}
 
     def transition_to_buffered(self, device_name, h5_file, initial_values, fresh):
-        # Read commands from the shot file and send them to the device
+        """ Required - Read commands from the shot file and send them to the device.
+
+        Not sure about the right description here.
+
+        Args:
+            device_name: Not sure here.
+            h5_file: Not sure here.
+            initial_values: Not sure here.
+            fresh: Not sure here.
+
+        Returns:
+            Empty dict.
+        """
 
         # this is when the hardware communication begins. It's important to reset the arduino here.
         self.reset_connection(self.connection)
@@ -80,6 +126,13 @@ class YunTempWorker(Worker):
         return {}
 
     def transition_to_manual(self):
+        """ Required - Not sure what it does.
+
+        Not sure about the right description here.
+
+        Returns:
+            Empty dict.
+        """
         # Read commands from the shot file and send them to the device
         with h5py.File(self.shot_file, "r") as f:
             group = f[f"devices/{self.device_name}"]
@@ -98,19 +151,36 @@ class YunTempWorker(Worker):
         return True
 
     def shutdown(self):
-        # Called when BLACS closes
+        """ Called when BLACS closes.
+        """
         self.connection.close()
 
     def abort_buffered(self):
-        # Called when a shot is aborted. We may or may not want to run
-        # transition_to_manual in this case. If not, then this method should do whatever
-        # else it needs to, and then return True. It should make sure to clear any state
-        # were storing about this shot (e.g. it should set self.shot_file = None)
+        """ Called when BLACS closes.
+
+        Called when a shot is aborted. We may or may not want to run
+        transition_to_manual in this case. If not, then this method should do whatever
+        else it needs to, and then return True. It should make sure to clear any state
+        were storing about this shot (e.g. it should set self.shot_file = None)
+        """
         return self.transition_to_manual()
 
     def abort_transition_to_buffered(self):
-        # This is called if transition_to_buffered fails with an exception or returns
-        # False.
+        """ This is called if transition_to_buffered fails with an exception or returns False.
+
+        Returns:
+        True, which indicates success.
+        """
         # Forget the shot file:
         self.shot_file = None
         return True  # Indicates success
+
+    def check_remote_values(self):
+        """ Called when remote values are checked
+
+        Returns: dictionary of remote values, keyed by hardware channel name.
+        """
+        current_output_values = {}
+        # read from the device, the values it is outputting
+        # place them in a dictionary, keyed by hardware channel
+        return current_output_values

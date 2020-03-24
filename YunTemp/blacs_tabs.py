@@ -46,6 +46,17 @@ class YunTempTab(DeviceTab):
         # and auto place the widgets in the UI
         self.auto_place_widgets(("DDS Outputs",dds_widgets))
 
+    def initialise_workers(self):
+        """Connects the Tab to the worker.
+
+        Not sure about the details to be honest.
+
+        Args:
+            self: Anything else?
+
+        Returns:
+            Nothing really. Just does the binding.
+        """
         connection_object = self.settings['connection_table'].find_by_name(self.device_name)
         conn_properties = connection_object.properties
 
@@ -73,5 +84,5 @@ class YunTempTab(DeviceTab):
         self.primary_worker = "main_worker"
 
         # Set the capabilities of this device
-        self.supports_remote_value_check(True)
+        self.supports_remote_value_check(False)
         self.supports_smart_programming(True)
