@@ -21,7 +21,9 @@ class YunTempWorker(Worker):
     def init(self):
         """Initialize the Worker.
 
-        Initializes the serial port and resets everything properly.
+        Initializes the serial port and resets everything properly. Do NOT
+        rename it to __init__ . There is something specific about Blacs that remains
+        a bit mystical to me.
         """
 
         # Make a serial connection to the device. The com port and buad rate which
@@ -183,5 +185,5 @@ class YunTempWorker(Worker):
             dictionary of remote values, keyed by hardware channel name.
         """
         # Dummy
-        current_output_values = {'setpoint': 2., 'P': 1., 'I': 4.};
+        current_output_values = {"setpoint": 2.0, "P": 1.0, "I": 4.0}
         return current_output_values
