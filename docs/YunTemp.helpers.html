@@ -1,0 +1,209 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>YunTemp.helpers package &#8212; Synqs Devices  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="YunTemp package" href="YunTemp.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="yuntemp-helpers-package">
+<h1>YunTemp.helpers package<a class="headerlink" href="#yuntemp-helpers-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="yuntemp-helpers-handlers-module">
+<h2>YunTemp.helpers.handlers module<a class="headerlink" href="#yuntemp-helpers-handlers-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-YunTemp.helpers.yuntemp">
+<span id="yuntemp-helpers-yuntemp-module"></span><h2>YunTemp.helpers.yuntemp module<a class="headerlink" href="#module-YunTemp.helpers.yuntemp" title="Permalink to this headline">¶</a></h2>
+<p>Simulat the YunTemp.</p>
+<p>This is an extremely simple server that might be used for testing the arduino webserver interface.
+It is based on flask. So before running it, you should run a</p>
+<p>pip install flask, flask_basicauth</p>
+<p>If you want to run it you can just start it through:</p>
+<p>python yuntemp.py</p>
+<p>This will open a test server on 127.0.0.1:5001. You can then adress it with the requests package.</p>
+<p>&gt; r = requests.get(‘<a class="reference external" href="http://127.0.0.1:5001/arduino/read/all/">http://127.0.0.1:5001/arduino/read/all/</a>’)
+&gt; r.text
+‘setpoint, input, error, output, G, tauI, tauD &lt;br /&gt;0,719,0,0,0,0,0’</p>
+<dl class="function">
+<dt id="YunTemp.helpers.yuntemp.get_temp">
+<code class="sig-prename descclassname">YunTemp.helpers.yuntemp.</code><code class="sig-name descname">get_temp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/YunTemp/helpers/yuntemp.html#get_temp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#YunTemp.helpers.yuntemp.get_temp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read out all properties from the arduino.</p>
+<p>Calculates back some random value and gives back whatever was set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a text string.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="YunTemp.helpers.yuntemp.set_differential">
+<code class="sig-prename descclassname">YunTemp.helpers.yuntemp.</code><code class="sig-name descname">set_differential</code><span class="sig-paren">(</span><em class="sig-param">n_val</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/YunTemp/helpers/yuntemp.html#set_differential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#YunTemp.helpers.yuntemp.set_differential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the D of the temp control.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n_val</strong> – The D value that is chosen.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a text string.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="YunTemp.helpers.yuntemp.set_gain">
+<code class="sig-prename descclassname">YunTemp.helpers.yuntemp.</code><code class="sig-name descname">set_gain</code><span class="sig-paren">(</span><em class="sig-param">n_val</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/YunTemp/helpers/yuntemp.html#set_gain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#YunTemp.helpers.yuntemp.set_gain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the proportional of the temp control.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n_val</strong> – The P value that is chosen.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a text string.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="YunTemp.helpers.yuntemp.set_integral">
+<code class="sig-prename descclassname">YunTemp.helpers.yuntemp.</code><code class="sig-name descname">set_integral</code><span class="sig-paren">(</span><em class="sig-param">n_val</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/YunTemp/helpers/yuntemp.html#set_integral"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#YunTemp.helpers.yuntemp.set_integral" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the integrator of the temp control.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n_val</strong> – The integral value that is chosen.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a text string.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="YunTemp.helpers.yuntemp.set_setpoint">
+<code class="sig-prename descclassname">YunTemp.helpers.yuntemp.</code><code class="sig-name descname">set_setpoint</code><span class="sig-paren">(</span><em class="sig-param">n_val</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/YunTemp/helpers/yuntemp.html#set_setpoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#YunTemp.helpers.yuntemp.set_setpoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the setpoint of the temp control.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n_val</strong> – The setpoint that is chosen.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a text string.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-YunTemp.helpers">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-YunTemp.helpers" title="Permalink to this headline">¶</a></h2>
+<p>Helper files to set up and test the YunTemp.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Synqs Devices</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">SynQS_devices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="newdevice.html">Create a new device</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">user_devices</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="CustomArduinoDevice.html">CustomArduinoDevice package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="MakoCamera.html">MakoCamera package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="SynthHDDevice.html">SynthHDDevice package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="YunTemp.html">YunTemp package</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">user_devices</a><ul>
+  <li><a href="YunTemp.html">YunTemp package</a><ul>
+      <li>Previous: <a href="YunTemp.html" title="previous chapter">YunTemp package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, SynQS.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/YunTemp.helpers.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

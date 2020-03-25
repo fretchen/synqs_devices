@@ -1,3 +1,8 @@
+"""The handlers from the devicecontrolserver for the WebTempControl.
+
+This does not run here.
+"""
+
 from app.thermocontrol import bp
 from app.thermocontrol.forms import (
     ConnectForm,

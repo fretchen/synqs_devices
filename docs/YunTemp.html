@@ -14,6 +14,7 @@
     <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="YunTemp.helpers package" href="YunTemp.helpers.html" />
     <link rel="prev" title="SynthHDDevice package" href="SynthHDDevice.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -33,6 +34,20 @@
             
   <div class="section" id="yuntemp-package">
 <h1>YunTemp package<a class="headerlink" href="#yuntemp-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="YunTemp.helpers.html">YunTemp.helpers package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="YunTemp.helpers.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="YunTemp.helpers.html#yuntemp-helpers-handlers-module">YunTemp.helpers.handlers module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="YunTemp.helpers.html#module-YunTemp.helpers.yuntemp">YunTemp.helpers.yuntemp module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="YunTemp.helpers.html#module-YunTemp.helpers">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
@@ -67,38 +82,96 @@
 </dl>
 </dd></dl>
 
+<dl class="method">
+<dt id="YunTemp.blacs_tabs.YunTempTab.initialise_workers">
+<code class="sig-name descname">initialise_workers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/YunTemp/blacs_tabs.html#YunTempTab.initialise_workers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#YunTemp.blacs_tabs.YunTempTab.initialise_workers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connects the Tab to the worker.</p>
+<p>Not sure about the details to be honest.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>self</strong> – Anything else?</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Nothing really. Just does the binding.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>
 <div class="section" id="module-YunTemp.blacs_workers">
 <span id="yuntemp-blacs-workers-module"></span><h2>YunTemp.blacs_workers module<a class="headerlink" href="#module-YunTemp.blacs_workers" title="Permalink to this headline">¶</a></h2>
+<p>This is where BLACS really connects to the hardware. Everything elso is just sending it here.</p>
 <dl class="class">
 <dt id="YunTemp.blacs_workers.YunTempWorker">
-<em class="property">class </em><code class="sig-prename descclassname">YunTemp.blacs_workers.</code><code class="sig-name descname">YunTempWorker</code><a class="reference internal" href="_modules/YunTemp/blacs_workers.html#YunTempWorker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#YunTemp.blacs_workers.YunTempWorker" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">YunTemp.blacs_workers.</code><code class="sig-name descname">YunTempWorker</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/YunTemp/blacs_workers.html#YunTempWorker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#YunTemp.blacs_workers.YunTempWorker" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">blacs.tab_base_classes.Worker</span></code></p>
+<p>The class behind the Worker. It inherits from Worker.</p>
+<dl class="attribute">
+<dt id="YunTemp.blacs_workers.YunTempWorker.connection">
+<code class="sig-name descname">connection</code><a class="headerlink" href="#YunTemp.blacs_workers.YunTempWorker.connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Not sure here.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="YunTemp.blacs_workers.YunTempWorker.shot_file">
+<code class="sig-name descname">shot_file</code><a class="headerlink" href="#YunTemp.blacs_workers.YunTempWorker.shot_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Not sure here.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="YunTemp.blacs_workers.YunTempWorker.abort_buffered">
 <code class="sig-name descname">abort_buffered</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/YunTemp/blacs_workers.html#YunTempWorker.abort_buffered"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#YunTemp.blacs_workers.YunTempWorker.abort_buffered" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Called when BLACS closes.</p>
+<p>Called when a shot is aborted. We may or may not want to run
+transition_to_manual in this case. If not, then this method should do whatever
+else it needs to, and then return True. It should make sure to clear any state
+were storing about this shot (e.g. it should set self.shot_file = None)</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="YunTemp.blacs_workers.YunTempWorker.abort_transition_to_buffered">
 <code class="sig-name descname">abort_transition_to_buffered</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/YunTemp/blacs_workers.html#YunTempWorker.abort_transition_to_buffered"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#YunTemp.blacs_workers.YunTempWorker.abort_transition_to_buffered" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>This is called if transition_to_buffered fails with an exception or returns False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True, which indicates success.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="YunTemp.blacs_workers.YunTempWorker.check_remote_values">
+<code class="sig-name descname">check_remote_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/YunTemp/blacs_workers.html#YunTempWorker.check_remote_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#YunTemp.blacs_workers.YunTempWorker.check_remote_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when remote values are checked.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>dictionary of remote values, keyed by hardware channel name.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="YunTemp.blacs_workers.YunTempWorker.init">
+<code class="sig-name descname">init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/YunTemp/blacs_workers.html#YunTempWorker.init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#YunTemp.blacs_workers.YunTempWorker.init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the Worker.</p>
+<p>Initializes the serial port and resets everything properly. Do NOT
+rename it to __init__ . There is something specific about Blacs that remains
+a bit mystical to me.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="YunTemp.blacs_workers.YunTempWorker.program_manual">
 <code class="sig-name descname">program_manual</code><span class="sig-paren">(</span><em class="sig-param">values</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/YunTemp/blacs_workers.html#YunTempWorker.program_manual"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#YunTemp.blacs_workers.YunTempWorker.program_manual" title="Permalink to this definition">¶</a></dt>
-<dd><p>Connects to the next available port.</p>
+<dd><p>Required - But a dummy we do not use.</p>
+<p>Not sure how to do this one properly.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>minimum</strong> – A port value greater or equal to 1024.</p>
+<dd class="field-odd"><p><strong>values</strong> – Not sure here.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The new minimum port.</p>
-</dd>
-<dt class="field-odd">Raises</dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ConnectionError" title="(in Python v3.8)"><strong>ConnectionError</strong></a> – If no available port is found.</p>
+<dd class="field-even"><p>Empty dict.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -106,34 +179,63 @@
 <dl class="method">
 <dt id="YunTemp.blacs_workers.YunTempWorker.reset_connection">
 <code class="sig-name descname">reset_connection</code><span class="sig-paren">(</span><em class="sig-param">ser</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/YunTemp/blacs_workers.html#YunTempWorker.reset_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#YunTemp.blacs_workers.YunTempWorker.reset_connection" title="Permalink to this definition">¶</a></dt>
-<dd><p>this function, when called resets the arduino. Please be aware that the serial port should be open before you call this function.
+<dd><p>Reset connection.</p>
+<p>This function, when called resets the arduino. Please be aware that the serial port should be open before you call this function.
 It resets Arduino DUE, and clears everything in its input and reads fresh from the arduino. The arduino when ready for the string
 to be written for the ramps displays ‘Arduino ready’, which is displayed in the device in BLACS. If you don’t see this, check your code.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ser</strong> – The serial connection to the Arduino.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Nothing really.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="YunTemp.blacs_workers.YunTempWorker.shutdown">
 <code class="sig-name descname">shutdown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/YunTemp/blacs_workers.html#YunTempWorker.shutdown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#YunTemp.blacs_workers.YunTempWorker.shutdown" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Called when BLACS closes.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="YunTemp.blacs_workers.YunTempWorker.transition_to_buffered">
 <code class="sig-name descname">transition_to_buffered</code><span class="sig-paren">(</span><em class="sig-param">device_name</em>, <em class="sig-param">h5_file</em>, <em class="sig-param">initial_values</em>, <em class="sig-param">fresh</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/YunTemp/blacs_workers.html#YunTempWorker.transition_to_buffered"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#YunTemp.blacs_workers.YunTempWorker.transition_to_buffered" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Required - Read commands from the shot file and send them to the device.</p>
+<p>Not sure about the right description here.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>device_name</strong> – Not sure here.</p></li>
+<li><p><strong>h5_file</strong> – Not sure here.</p></li>
+<li><p><strong>initial_values</strong> – Not sure here.</p></li>
+<li><p><strong>fresh</strong> – Not sure here.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Empty dict.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="YunTemp.blacs_workers.YunTempWorker.transition_to_manual">
 <code class="sig-name descname">transition_to_manual</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/YunTemp/blacs_workers.html#YunTempWorker.transition_to_manual"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#YunTemp.blacs_workers.YunTempWorker.transition_to_manual" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Required - Not sure what it does.</p>
+<p>Not sure about the right description here.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Empty dict.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
 </div>
 <div class="section" id="yuntemp-connectiontable-yuntemp-module">
 <h2>YunTemp.connectiontable_yuntemp module<a class="headerlink" href="#yuntemp-connectiontable-yuntemp-module" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="yuntemp-handlers-module">
-<h2>YunTemp.handlers module<a class="headerlink" href="#yuntemp-handlers-module" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="yuntemp-labscript-devices-module">
 <h2>YunTemp.labscript_devices module<a class="headerlink" href="#yuntemp-labscript-devices-module" title="Permalink to this headline">¶</a></h2>
@@ -142,14 +244,6 @@ to be written for the ramps displays ‘Arduino ready’, which is displayed in 
 <span id="yuntemp-register-classes-module"></span><h2>YunTemp.register_classes module<a class="headerlink" href="#module-YunTemp.register_classes" title="Permalink to this headline">¶</a></h2>
 <p>Register the YunTemp to blacs.</p>
 <p>This is boilerplate and should be only minimally changed.</p>
-</div>
-<div class="section" id="module-YunTemp.simSerialPort">
-<span id="yuntemp-simserialport-module"></span><h2>YunTemp.simSerialPort module<a class="headerlink" href="#module-YunTemp.simSerialPort" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="YunTemp.simSerialPort.test_serial">
-<code class="sig-prename descclassname">YunTemp.simSerialPort.</code><code class="sig-name descname">test_serial</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/YunTemp/simSerialPort.html#test_serial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#YunTemp.simSerialPort.test_serial" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </div>
 <div class="section" id="module-YunTemp">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-YunTemp" title="Permalink to this headline">¶</a></h2>
@@ -195,6 +289,7 @@ to be written for the ramps displays ‘Arduino ready’, which is displayed in 
   <li><a href="index.html">Documentation overview</a><ul>
   <li><a href="modules.html">user_devices</a><ul>
       <li>Previous: <a href="SynthHDDevice.html" title="previous chapter">SynthHDDevice package</a></li>
+      <li>Next: <a href="YunTemp.helpers.html" title="next chapter">YunTemp.helpers package</a></li>
   </ul></li>
   </ul></li>
 </ul>

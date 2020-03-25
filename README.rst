@@ -34,4 +34,4 @@ What are the files for ?
 to add the new device to the documentation you should run within docs
 ::
 
-  sphinx-apidoc -o source/ ../<package-name>
+  make github

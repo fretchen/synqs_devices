@@ -53,56 +53,71 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            Nothing really. Just sets things up.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-    <span class="c1"># Capabilities</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">base_units</span> <span class="o">=</span>    <span class="p">{</span><span class="s1">&#39;freq&#39;</span><span class="p">:</span><span class="s1">&#39;Hz&#39;</span><span class="p">,</span>               <span class="s1">&#39;phase&#39;</span><span class="p">:</span><span class="s1">&#39;Degrees&#39;</span><span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">base_min</span> <span class="o">=</span>      <span class="p">{</span><span class="s1">&#39;freq&#39;</span><span class="p">:</span><span class="mf">200e3</span><span class="p">,</span>              <span class="s1">&#39;phase&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">base_max</span> <span class="o">=</span>      <span class="p">{</span><span class="s1">&#39;freq&#39;</span><span class="p">:</span><span class="mf">402.653183</span><span class="o">*</span><span class="mf">10.0</span><span class="o">**</span><span class="mi">6</span><span class="p">,</span> <span class="s1">&#39;phase&#39;</span><span class="p">:</span><span class="mi">360</span><span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">base_step</span> <span class="o">=</span>     <span class="p">{</span><span class="s1">&#39;freq&#39;</span><span class="p">:</span><span class="mi">10</span><span class="o">**</span><span class="mi">6</span><span class="p">,</span>              <span class="s1">&#39;phase&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">base_decimals</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;freq&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span>                  <span class="s1">&#39;phase&#39;</span><span class="p">:</span><span class="mi">3</span><span class="p">}</span> <span class="c1"># TODO: find out what the phase precision is!</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">num_DDS</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">analog_props</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;setpoint&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;base_unit&quot;</span><span class="p">:</span> <span class="s2">&quot;V&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mf">500.0</span><span class="p">,</span>
+                <span class="s2">&quot;step&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+                <span class="s2">&quot;decimals&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;P&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;base_unit&quot;</span><span class="p">:</span> <span class="s2">&quot;V&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mf">500.0</span><span class="p">,</span>
+                <span class="s2">&quot;step&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+                <span class="s2">&quot;decimals&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;I&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;base_unit&quot;</span><span class="p">:</span> <span class="s2">&quot;V&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mf">500.0</span><span class="p">,</span>
+                <span class="s2">&quot;step&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+                <span class="s2">&quot;decimals&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
 
-        <span class="c1"># Create DDS Output objects</span>
-        <span class="n">dds_prop</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_DDS</span><span class="p">):</span> <span class="c1"># only 1 DDS output</span>
-            <span class="n">dds_prop</span><span class="p">[</span><span class="s1">&#39;channel </span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="k">for</span> <span class="n">subchnl</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;freq&#39;</span><span class="p">,</span> <span class="s1">&#39;phase&#39;</span><span class="p">]:</span>
-                <span class="n">dds_prop</span><span class="p">[</span><span class="s1">&#39;channel </span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">][</span><span class="n">subchnl</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;base_unit&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">base_units</span><span class="p">[</span><span class="n">subchnl</span><span class="p">],</span>
-                                                     <span class="s1">&#39;min&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">base_min</span><span class="p">[</span><span class="n">subchnl</span><span class="p">],</span>
-                                                     <span class="s1">&#39;max&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">base_max</span><span class="p">[</span><span class="n">subchnl</span><span class="p">],</span>
-                                                     <span class="s1">&#39;step&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">base_step</span><span class="p">[</span><span class="n">subchnl</span><span class="p">],</span>
-                                                     <span class="s1">&#39;decimals&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">base_decimals</span><span class="p">[</span><span class="n">subchnl</span><span class="p">]</span>
-                                                    <span class="p">}</span>
         <span class="c1"># Create the output objects</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">create_dds_outputs</span><span class="p">(</span><span class="n">dds_prop</span><span class="p">)</span>
-        <span class="c1"># Create widgets for output objects</span>
-        <span class="n">dds_widgets</span><span class="p">,</span><span class="n">ao_widgets</span><span class="p">,</span><span class="n">do_widgets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auto_create_widgets</span><span class="p">()</span>
-        <span class="c1"># and auto place the widgets in the UI</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">auto_place_widgets</span><span class="p">((</span><span class="s2">&quot;DDS Outputs&quot;</span><span class="p">,</span><span class="n">dds_widgets</span><span class="p">))</span>
+        <span class="c1"># self.create_dds_outputs(dds_prop)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_analog_outputs</span><span class="p">(</span><span class="n">analog_props</span><span class="p">)</span>
 
-        <span class="n">connection_object</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="s1">&#39;connection_table&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">find_by_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device_name</span><span class="p">)</span>
+        <span class="c1"># Create widgets for output objects</span>
+        <span class="n">dds_widgets</span><span class="p">,</span> <span class="n">ao_widgets</span><span class="p">,</span> <span class="n">do_widgets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auto_create_widgets</span><span class="p">()</span>
+
+        <span class="c1"># and auto place the widgets in the UI</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">auto_place_widgets</span><span class="p">(</span><span class="n">ao_widgets</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="YunTempTab.initialise_workers"><a class="viewcode-back" href="../../YunTemp.html#YunTemp.blacs_tabs.YunTempTab.initialise_workers">[docs]</a>    <span class="k">def</span> <span class="nf">initialise_workers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Connects the Tab to the worker.</span>
+
+<span class="sd">        Not sure about the details to be honest.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            self: Anything else?</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Nothing really. Just does the binding.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">connection_object</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="s2">&quot;connection_table&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">find_by_name</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">device_name</span>
+        <span class="p">)</span>
         <span class="n">conn_properties</span> <span class="o">=</span> <span class="n">connection_object</span><span class="o">.</span><span class="n">properties</span>
 
         <span class="c1"># Store the COM port to be used</span>
-        <span class="n">blacs_connection</span> <span class="o">=</span>  <span class="nb">str</span><span class="p">(</span><span class="n">connection_object</span><span class="o">.</span><span class="n">BLACS_connection</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s1">&#39;,&#39;</span> <span class="ow">in</span> <span class="n">blacs_connection</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">com_port</span><span class="p">,</span> <span class="n">baud_rate</span> <span class="o">=</span> <span class="n">blacs_connection</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+        <span class="n">blacs_connection</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">connection_object</span><span class="o">.</span><span class="n">BLACS_connection</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;,&quot;</span> <span class="ow">in</span> <span class="n">blacs_connection</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">com_port</span><span class="p">,</span> <span class="n">baud_rate</span> <span class="o">=</span> <span class="n">blacs_connection</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">baud_rate</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">baud_rate</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">com_port</span> <span class="o">=</span> <span class="n">blacs_connection</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">baud_rate</span> <span class="o">=</span> <span class="mi">19200</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">ext_clk</span> <span class="o">=</span> <span class="n">conn_properties</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ext_clk&#39;</span><span class="p">,</span><span class="kc">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">clk_freq</span> <span class="o">=</span> <span class="n">conn_properties</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;clk_freq&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">clk_scale</span> <span class="o">=</span> <span class="n">conn_properties</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;clk_scale&#39;</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
-
         <span class="c1"># Create and set the primary worker</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">create_worker</span><span class="p">(</span><span class="s2">&quot;main_worker&quot;</span><span class="p">,</span><span class="s2">&quot;user_devices.YunTemp.blacs_workers.YunTempWorker&quot;</span><span class="p">,</span>
-                                <span class="p">{</span><span class="s1">&#39;com_port&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">com_port</span><span class="p">,</span>
-                                <span class="s1">&#39;baud_rate&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">baud_rate</span><span class="p">,</span>
-                                <span class="s1">&#39;ext_clk&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ext_clk</span><span class="p">,</span>
-                                <span class="s1">&#39;clk_freq&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">clk_freq</span><span class="p">,</span>
-                                <span class="s1">&#39;clk_scale&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">clk_scale</span>
-                                <span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_worker</span><span class="p">(</span>
+            <span class="s2">&quot;main_worker&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;user_devices.YunTemp.blacs_workers.YunTempWorker&quot;</span><span class="p">,</span>
+            <span class="p">{</span><span class="s2">&quot;com_port&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">com_port</span><span class="p">,</span> <span class="s2">&quot;baud_rate&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">baud_rate</span><span class="p">},</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">primary_worker</span> <span class="o">=</span> <span class="s2">&quot;main_worker&quot;</span>
 
         <span class="c1"># Set the capabilities of this device</span>

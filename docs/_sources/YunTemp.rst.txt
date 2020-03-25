@@ -1,6 +1,13 @@
 YunTemp package
 ===============
 
+Subpackages
+-----------
+
+.. toctree::
+
+   YunTemp.helpers
+
 Submodules
 ----------
 
@@ -28,14 +35,6 @@ YunTemp.connectiontable\_yuntemp module
    :undoc-members:
    :show-inheritance:
 
-YunTemp.handlers module
------------------------
-
-.. automodule:: YunTemp.handlers
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 YunTemp.labscript\_devices module
 ---------------------------------
 
@@ -48,14 +47,6 @@ YunTemp.register\_classes module
 --------------------------------
 
 .. automodule:: YunTemp.register_classes
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-YunTemp.simSerialPort module
-----------------------------
-
-.. automodule:: YunTemp.simSerialPort
    :members:
    :undoc-members:
    :show-inheritance:
