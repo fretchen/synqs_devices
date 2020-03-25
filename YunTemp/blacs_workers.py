@@ -182,7 +182,6 @@ class YunTempWorker(Worker):
         Returns:
             dictionary of remote values, keyed by hardware channel name.
         """
-        current_output_values = {}
-        # read from the device, the values it is outputting
-        # place them in a dictionary, keyed by hardware channel
+        # Dummy
+        current_output_values = {'channel_0': 2., 'channel_1': 1.};
         return current_output_values

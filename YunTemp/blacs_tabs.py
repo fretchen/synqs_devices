@@ -28,19 +28,48 @@ class YunTempTab(DeviceTab):
         self.base_decimals = {'freq':0,                  'phase':3} # TODO: find out what the phase precision is!
         self.num_DDS = 1
 
-        # Create DDS Output objects
-        dds_prop = {}
-        for i in range(self.num_DDS): # only 1 DDS output
-            dds_prop['channel %d' % i] = {}
-            for subchnl in ['freq', 'phase']:
-                dds_prop['channel %d' % i][subchnl] = {'base_unit':self.base_units[subchnl],
-                                                     'min':self.base_min[subchnl],
-                                                     'max':self.base_max[subchnl],
-                                                     'step':self.base_step[subchnl],
-                                                     'decimals':self.base_decimals[subchnl]
-                                                    }
+        # # Create DDS Output objects
+        # dds_prop = {'channel_1':
+        #     { 'freq': {'base_unit':self.base_units['freq'],
+        #             'min':self.base_min['freq'],
+        #             'max':self.base_max['freq'],
+        #             'step':self.base_step['freq'],
+        #             'decimals':self.base_decimals['freq']
+        #             },
+        #     'phase': {'base_unit':self.base_units['phase'],
+        #             'min':self.base_min['phase'],
+        #             'max':self.base_max['phase'],
+        #             'step':self.base_step['phase'],
+        #             'decimals':self.base_decimals['phase']
+        #             }
+        #     }
+        # };
+
+        analog_props = { 'channel_0': {'base_unit': 'V',
+                            'min':0.,
+                            'max':500.,
+                            'step':1.,
+                            'decimals':1
+                            },
+                    'channel_1': {'base_unit': 'V',
+                                'min':0.,
+                                'max':500.,
+                                'step':1.,
+                                'decimals':1
+                            }
+                        };
+        # for i in range(self.num_DDS): # only 1 DDS output
+        #     dds_prop['channel %d' % i] = {}
+        #     for subchnl in ['freq', 'phase']:
+        #         dds_prop['channel %d' % i][subchnl] = {'base_unit':self.base_units[subchnl],
+        #                                              'min':self.base_min[subchnl],
+        #                                              'max':self.base_max[subchnl],
+        #                                              'step':self.base_step[subchnl],
+        #                                              'decimals':self.base_decimals[subchnl]
+        #                                             }
         # Create the output objects
-        self.create_dds_outputs(dds_prop)
+        #self.create_dds_outputs(dds_prop)
+        self.create_analog_outputs(analog_props)
         # Create widgets for output objects
         dds_widgets,ao_widgets,do_widgets = self.auto_create_widgets()
         # and auto place the widgets in the UI
@@ -69,20 +98,13 @@ class YunTempTab(DeviceTab):
             self.com_port = blacs_connection
             self.baud_rate = 19200
 
-        self.ext_clk = conn_properties.get('ext_clk',False)
-        self.clk_freq = conn_properties.get('clk_freq', None)
-        self.clk_scale = conn_properties.get('clk_scale',1)
-
         # Create and set the primary worker
         self.create_worker("main_worker","user_devices.YunTemp.blacs_workers.YunTempWorker",
                                 {'com_port':self.com_port,
-                                'baud_rate': self.baud_rate,
-                                'ext_clk': self.ext_clk,
-                                'clk_freq': self.clk_freq,
-                                'clk_scale': self.clk_scale
+                                'baud_rate': self.baud_rate
                                 })
         self.primary_worker = "main_worker"
 
         # Set the capabilities of this device
-        self.supports_remote_value_check(False)
+        self.supports_remote_value_check(True)
         self.supports_smart_programming(True)
