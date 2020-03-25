@@ -1,19 +1,22 @@
-""" Simulat the YunTemp.
+""" Simulate the YunTemp.
 
 This is an extremely simple server that might be used for testing the arduino webserver interface.
 It is based on flask. So before running it, you should run a
+::
 
-pip install flask, flask_basicauth
+    pip install flask, flask_basicauth
 
 If you want to run it you can just start it through:
+::
 
-python yuntemp.py
+    python yuntemp.py
 
 This will open a test server on 127.0.0.1:5001. You can then adress it with the requests package.
+::
 
-> r = requests.get('http://127.0.0.1:5001/arduino/read/all/')
-> r.text
-'setpoint, input, error, output, G, tauI, tauD <br />0,719,0,0,0,0,0'
+    > r = requests.get('http://127.0.0.1:5001/arduino/read/all/')
+    > r.text
+    'setpoint, input, error, output, G, tauI, tauD <br />0,719,0,0,0,0,0'
 """
 
 from flask import Flask, request, jsonify

@@ -35,18 +35,21 @@
 
 <span class="sd">This is an extremely simple server that might be used for testing the arduino webserver interface.</span>
 <span class="sd">It is based on flask. So before running it, you should run a</span>
+<span class="sd">::</span>
 
-<span class="sd">pip install flask, flask_basicauth</span>
+<span class="sd">    pip install flask, flask_basicauth</span>
 
 <span class="sd">If you want to run it you can just start it through:</span>
+<span class="sd">::</span>
 
-<span class="sd">python yuntemp.py</span>
+<span class="sd">    python yuntemp.py</span>
 
 <span class="sd">This will open a test server on 127.0.0.1:5001. You can then adress it with the requests package.</span>
+<span class="sd">::</span>
 
-<span class="sd">&gt; r = requests.get(&#39;http://127.0.0.1:5001/arduino/read/all/&#39;)</span>
-<span class="sd">&gt; r.text</span>
-<span class="sd">&#39;setpoint, input, error, output, G, tauI, tauD &lt;br /&gt;0,719,0,0,0,0,0&#39;</span>
+<span class="sd">    &gt; r = requests.get(&#39;http://127.0.0.1:5001/arduino/read/all/&#39;)</span>
+<span class="sd">    &gt; r.text</span>
+<span class="sd">    &#39;setpoint, input, error, output, G, tauI, tauD &lt;br /&gt;0,719,0,0,0,0,0&#39;</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span>

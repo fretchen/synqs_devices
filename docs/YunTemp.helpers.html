@@ -44,13 +44,19 @@
 <p>Simulat the YunTemp.</p>
 <p>This is an extremely simple server that might be used for testing the arduino webserver interface.
 It is based on flask. So before running it, you should run a</p>
-<p>pip install flask, flask_basicauth</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">flask</span><span class="p">,</span> <span class="n">flask_basicauth</span>
+</pre></div>
+</div>
 <p>If you want to run it you can just start it through:</p>
-<p>python yuntemp.py</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">yuntemp</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
 <p>This will open a test server on 127.0.0.1:5001. You can then adress it with the requests package.</p>
-<p>&gt; r = requests.get(‘<a class="reference external" href="http://127.0.0.1:5001/arduino/read/all/">http://127.0.0.1:5001/arduino/read/all/</a>’)
-&gt; r.text
-‘setpoint, input, error, output, G, tauI, tauD &lt;br /&gt;0,719,0,0,0,0,0’</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;http://127.0.0.1:5001/arduino/read/all/&#39;</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span>
+<span class="s1">&#39;setpoint, input, error, output, G, tauI, tauD &lt;br /&gt;0,719,0,0,0,0,0&#39;</span>
+</pre></div>
+</div>
 <dl class="function">
 <dt id="YunTemp.helpers.yuntemp.get_temp">
 <code class="sig-prename descclassname">YunTemp.helpers.yuntemp.</code><code class="sig-name descname">get_temp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/YunTemp/helpers/yuntemp.html#get_temp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#YunTemp.helpers.yuntemp.get_temp" title="Permalink to this definition">¶</a></dt>
