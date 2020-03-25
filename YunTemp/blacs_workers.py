@@ -7,6 +7,9 @@ import time
 import labscript_utils.h5_lock
 import h5py
 from blacs.tab_base_classes import Worker
+import socket
+import sys
+from userlib.user_devices.YunTemp.helpers.yuntemp import *
 
 
 class YunTempWorker(Worker):
@@ -21,21 +24,24 @@ class YunTempWorker(Worker):
     def init(self):
         """Initialize the Worker.
 
-        Initializes the serial port and resets everything properly. Do NOT
+        Initializes the IP socket and resets everything properly. Do NOT
         rename it to __init__ . There is something specific about Blacs that remains
         a bit mystical to me.
         """
 
-        # Make a serial connection to the device. The com port and buad rate which
-        # were passed to us from the BLACS tab are now available as instance attributes
-        self.connection = serial.Serial(
-            self.com_port, baudrate=self.baud_rate, timeout=0.1
-        )
-        ser = self.connection
+        # Create a TCP/IP socket
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
+        # Connect the socket to the port where the server is listening
+        self.connection = sock.connect(
+             (self.target, self.port)
+        )
+        ip = self.connection
+        
         # every time the device is restarted in BLACS,we reset the arduino after opening the serial port; this is a peculiar nature of our setup.
         # Note that this reset when called here, doesn't run in every shot.
-        self.reset_connection(ser)
+        #self.reset_connection(ser)
+        #get_temp()
 
         # Could send and receive data here to confirm the device is working and do
         # any initial setup that is not related to any particular shot.
@@ -43,7 +49,7 @@ class YunTempWorker(Worker):
         # Each shot, we will remember the shot file for the duration of that shot
         self.shot_file = None
 
-    def reset_connection(self, ser):
+    def reset_connection(self, ip):
 
         """ Reset connection.
 
@@ -57,19 +63,19 @@ class YunTempWorker(Worker):
         Returns:
             Nothing really.
         """
-        print(
-            self.connection.is_open
-        )  # check whether the port is open. Displays True in the BLACS device tab
-        # ser.setRTS(True)
-        # ser.setDTR(True)
-        # time.sleep(0.1)
-        # ser.setRTS(False)
-        # ser.setDTR(False)
-        # ser.reset_input_buffer()
-        #
-        # line = ser.readline()
-        # ard_str = line[0:-2]
-        # print(ard_str)
+        #print(
+            #self.connection.is_open
+        #)  # check whether the port is open. Displays True in the BLACS device tab
+        ser.setRTS(True)
+        ser.setDTR(True)
+        time.sleep(0.1)
+        ser.setRTS(False)
+        ser.setDTR(False)
+        ser.reset_input_buffer()
+
+        line = ser.readline()
+        ard_str = line[0:-2]
+        print(ard_str)
 
     # We don't use this method but it needs to be defined:
     def program_manual(self, values):
@@ -185,5 +191,5 @@ class YunTempWorker(Worker):
             dictionary of remote values, keyed by hardware channel name.
         """
         # Dummy
-        current_output_values = {"setpoint": 2.0, "P": 1.0, "I": 4.0}
+        current_output_values = {"setpoint": 0.0, "P": 0.0, "I": 0.0}
         return current_output_values

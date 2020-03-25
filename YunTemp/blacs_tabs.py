@@ -73,17 +73,17 @@ class YunTempTab(DeviceTab):
         # Store the COM port to be used
         blacs_connection = str(connection_object.BLACS_connection)
         if "," in blacs_connection:
-            self.com_port, baud_rate = blacs_connection.split(",")
-            self.baud_rate = int(baud_rate)
+            self.target, port = blacs_connection.split(",")
+            self.port = int(port)
         else:
-            self.com_port = blacs_connection
-            self.baud_rate = 19200
+            self.target = blacs_connection
+            self.port = 5001
 
         # Create and set the primary worker
         self.create_worker(
             "main_worker",
             "user_devices.YunTemp.blacs_workers.YunTempWorker",
-            {"com_port": self.com_port, "baud_rate": self.baud_rate},
+            {"target": self.target, "port": self.port},
         )
         self.primary_worker = "main_worker"
 
