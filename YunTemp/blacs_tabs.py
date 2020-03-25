@@ -45,18 +45,24 @@ class YunTempTab(DeviceTab):
         #     }
         # };
 
-        analog_props = { 'channel_0': {'base_unit': 'V',
+        analog_props = { 'setpoint': {'base_unit': 'V',
                             'min':0.,
                             'max':500.,
                             'step':1.,
                             'decimals':1
                             },
-                    'channel_1': {'base_unit': 'V',
+                        'P': {'base_unit': 'V',
                                 'min':0.,
                                 'max':500.,
                                 'step':1.,
                                 'decimals':1
-                            }
+                            },
+                        'I': {'base_unit': 'V',
+                            'min':0.,
+                            'max':500.,
+                            'step':1.,
+                            'decimals':1
+                        },
                         };
         # for i in range(self.num_DDS): # only 1 DDS output
         #     dds_prop['channel %d' % i] = {}
@@ -73,7 +79,7 @@ class YunTempTab(DeviceTab):
         # Create widgets for output objects
         dds_widgets,ao_widgets,do_widgets = self.auto_create_widgets()
         # and auto place the widgets in the UI
-        self.auto_place_widgets(("DDS Outputs",dds_widgets))
+        self.auto_place_widgets(ao_widgets)
 
     def initialise_workers(self):
         """Connects the Tab to the worker.

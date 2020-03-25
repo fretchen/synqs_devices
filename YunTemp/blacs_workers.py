@@ -183,5 +183,5 @@ class YunTempWorker(Worker):
             dictionary of remote values, keyed by hardware channel name.
         """
         # Dummy
-        current_output_values = {'channel_0': 2., 'channel_1': 1.};
+        current_output_values = {'setpoint': 2., 'P': 1., 'I': 4.};
         return current_output_values
