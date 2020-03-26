@@ -44,6 +44,11 @@ class YunTempTab(DeviceTab):
             },
         }
 
+        # analog_in_props = {
+        #     "value": {
+        #         "base_unit": "V"
+        #     },
+        # }
         # Create the output objects
         self.create_analog_outputs(analog_props)
 

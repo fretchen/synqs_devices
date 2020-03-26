@@ -66,20 +66,6 @@ class YunTempWorker(Worker):
         ard_str = line[0:-2]
         print(ard_str)
 
-    # We don't use this method but it needs to be defined:
-    def program_manual(self, values):
-        """ Required - But a dummy we do not use.
-
-        Not sure how to do this one properly.
-
-        Args:
-            values: Not sure here.
-
-        Returns:
-            Empty dict.
-        """
-        return {}
-
     def transition_to_buffered(self, device_name, h5_file, initial_values, fresh):
         """ Required - Read commands from the shot file and send them to the device.
 
@@ -164,17 +150,15 @@ class YunTempWorker(Worker):
 
         vals = ard_str.split(",")
         if len(vals) == 7:
-            setpoint = vals[0]
-            value = vals[1]
-            error = vals[2]
-            output = vals[3]
-            gain = vals[4]
-            integral = vals[5]
-            sp_vals = vals[6].split("\r")
-            diff = sp_vals[0]
-        print("I AM HERE!!!!!!!!!!!!")
-        print(ard_str)
-        print(value)
+            setpoint =  vals[0]
+            value    =  vals[1]
+            error    =  vals[2]
+            output   =  vals[3]
+            gain     =  vals[4]
+            integral =  vals[5]
+            sp_vals  =  vals[6].split("\r")
+            diff     =  sp_vals[0]
+
         current_output_values = {
             "setpoint": float(setpoint),
             "P": float(gain),
@@ -207,7 +191,7 @@ class YunTempWorker(Worker):
                 "http": None,
                 "https": None,
             }
-            r = requests.get(self.http_str(), timeout=self.timeout, proxies=proxies)
+            r = requests.get(self.temp_http_str(), timeout=self.timeout, proxies=proxies)
             return True
         except ConnectionError:
             return False
@@ -217,7 +201,7 @@ class YunTempWorker(Worker):
         """
         try:
             set_str = "/arduino/write/setpoint/" + str(self.setpoint) + "/"
-            addr = self.http_str() + set_str
+            addr = self.target + set_str
             proxies = {
                 "http": None,
                 "https": None,
@@ -235,7 +219,7 @@ class YunTempWorker(Worker):
             }
 
             set_str = "/arduino/write/gain/" + str(self.gain) + "/"
-            addr = self.http_str() + set_str
+            addr = self.target + set_str
             r = requests.get(addr, timeout=self.timeout, proxies=proxies)
             return r.ok
         except ConnectionError:
@@ -248,7 +232,7 @@ class YunTempWorker(Worker):
                 "https": None,
             }
             set_str = "/arduino/write/integral/" + str(self.integral) + "/"
-            addr = self.http_str() + set_str
+            addr = self.target + set_str
             r = requests.get(addr, timeout=self.timeout, proxies=proxies)
             return r.ok
         except ConnectionError:
@@ -261,8 +245,36 @@ class YunTempWorker(Worker):
                 "https": None,
             }
             set_str = "/arduino/write/differential/" + str(self.diff) + "/"
-            addr = self.http_str() + set_str
+            addr = self.target + set_str
             r = requests.get(addr, timeout=self.timeout, proxies=proxies)
             return r.ok
         except ConnectionError:
             return False
+
+    def program_manual(self,front_panel_values):
+        '''Performans manual updates from BLACS front panel.
+        '''
+        try:
+            proxies = {
+                "http": None,
+                "https": None,
+            }
+            r = requests.get(
+                self.temp_http_str(), timeout=self.timeout, proxies=proxies
+            )
+
+        except ConnectionError:
+            print("No connection")
+            return 0, 0
+
+        # Update values from front panel
+        self.setpoint = front_panel_values['setpoint']
+        self.gain     = front_panel_values['P']
+        self.integral = front_panel_values['I']
+
+        # Program Device to front panel values
+        self.set_setpoint()
+        self.set_gain()
+        self.set_integral()
+
+        return self.check_remote_values()
