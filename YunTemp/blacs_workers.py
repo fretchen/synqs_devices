@@ -29,7 +29,14 @@ class YunTempWorker(Worker):
         a bit mystical to me.
         """
         # Each shot, we will remember the shot file for the duration of that shot
+        self.timeout = 1
         self.shot_file = None
+
+    def __repr__(self):
+        """Nice printing format for the YunTempWorker.
+        """
+        ret_str = "<YunTempWorker {}".format(self.target) + ">"
+        return ret_str
 
     def reset_connection(self, ip):
 
@@ -45,9 +52,9 @@ class YunTempWorker(Worker):
         Returns:
             Nothing really.
         """
-        #print(
-            #self.connection.is_open
-        #)  # check whether the port is open. Displays True in the BLACS device tab
+        # print(
+        # self.connection.is_open
+        # )  # check whether the port is open. Displays True in the BLACS device tab
         ser.setRTS(True)
         ser.setDTR(True)
         time.sleep(0.1)
@@ -88,28 +95,6 @@ class YunTempWorker(Worker):
             Empty dict.
         """
 
-        # this is when the hardware communication begins. It's important to reset the arduino here.
-        self.reset_connection(self.connection)
-
-        self.shot_file = h5_file
-        with h5py.File(self.shot_file, "r") as f:
-            group = f[f"devices/{self.device_name}"]
-            if "START_COMMANDS" in group:
-                start_commands = group["START_COMMANDS"][:]
-            else:
-                start_commands = None
-        # It is polite to close the shot file (by exiting the 'with' block) before
-        # communicating with the hardware, because other processes cannot open the file
-        # whilst we still have it open
-        for command in start_commands:
-            print(f"sending command: {repr(command)}")
-
-            self.connection.write(command)
-            # self.connection.flush()
-            # this command is written in Experiment.py, which is fetched here and actually written onto the arduino
-            # you will see this in the BLACS device tab. It's nothing but the string that we should send to the arduino
-            # inorder to control the DDS
-
         # This is expected by BLACS, we should return the final values that numerical
         # channels have from th shot - for us we have no channels so this is an empty
         # dictionary
@@ -123,19 +108,6 @@ class YunTempWorker(Worker):
         Returns:
             Empty dict.
         """
-        # Read commands from the shot file and send them to the device
-        with h5py.File(self.shot_file, "r") as f:
-            group = f[f"devices/{self.device_name}"]
-            if "STOP_COMMANDS" in group:
-                stop_commands = group["STOP_COMMANDS"][:]
-            else:
-                stop_commands = None
-        for command in stop_commands:
-            print(f"sending command: {repr(command)}")
-            self.connection.write(command)
-
-        # Forget the shot file:
-        self.shot_file = None
 
         # This is expected by BLACS to indicate success:
         return True
@@ -143,6 +115,8 @@ class YunTempWorker(Worker):
     def shutdown(self):
         """ Called when BLACS closes.
         """
+
+        # does this make any sense for us ???
         self.connection.close()
 
     def abort_buffered(self):
@@ -173,10 +147,122 @@ class YunTempWorker(Worker):
             dictionary of remote values, keyed by hardware channel name.
         """
         # Dummy
-        call_string  = self.target + 'arduino/read/all/';
-        r = requests.get(call_string);
-        print(r.text)
+        try:
+            proxies = {
+                "http": None,
+                "https": None,
+            }
+            r = requests.get(
+                self.temp_http_str(), timeout=self.timeout, proxies=proxies
+            )
+        except ConnectionError:
+            print("No connection")
+            return 0, 0
+        html_text = r.text
+        lines = html_text.split("<br />")
+        ard_str = lines[1]
 
-        # now we need to parse the values from r.text  into the output_values.
-        current_output_values = {"setpoint": 0.0, "P": 0.0, "I": 0.0}
+        vals = ard_str.split(",")
+        if len(vals) == 7:
+            setpoint = vals[0]
+            value = vals[1]
+            error = vals[2]
+            output = vals[3]
+            gain = vals[4]
+            integral = vals[5]
+            sp_vals = vals[6].split("\r")
+            diff = sp_vals[0]
+        print("I AM HERE!!!!!!!!!!!!")
+        print(ard_str)
+        print(value)
+        current_output_values = {
+            "setpoint": float(setpoint),
+            "P": float(gain),
+            "I": float(integral),
+        }
         return current_output_values
+
+    """ The following stuff come from the DeviceControlServer code and more precisely
+    from the WebTempControl model. So no guarantee  that it works right now ...
+    """
+
+    def temp_http_str(self):
+        return self.target + "arduino/read/all/"
+
+    def temp_field_str(self):
+        return "read_wtc" + str(self.id)
+
+    def conn_str(self):
+        return "conn_wtc" + str(self.id)
+
+    def startstop_str(self):
+        return "start" + str(self.id)
+
+    def is_open(self):
+        """ Test if the serial connection is open
+        """
+
+        try:
+            proxies = {
+                "http": None,
+                "https": None,
+            }
+            r = requests.get(self.http_str(), timeout=self.timeout, proxies=proxies)
+            return True
+        except ConnectionError:
+            return False
+
+    def set_setpoint(self):
+        """Outdated....
+        """
+        try:
+            set_str = "/arduino/write/setpoint/" + str(self.setpoint) + "/"
+            addr = self.http_str() + set_str
+            proxies = {
+                "http": None,
+                "https": None,
+            }
+            r = requests.get(addr, timeout=self.timeout, proxies=proxies)
+            return r.ok
+        except ConnectionError:
+            return False
+
+    def set_gain(self):
+        try:
+            proxies = {
+                "http": None,
+                "https": None,
+            }
+
+            set_str = "/arduino/write/gain/" + str(self.gain) + "/"
+            addr = self.http_str() + set_str
+            r = requests.get(addr, timeout=self.timeout, proxies=proxies)
+            return r.ok
+        except ConnectionError:
+            return False
+
+    def set_integral(self):
+        try:
+            proxies = {
+                "http": None,
+                "https": None,
+            }
+            set_str = "/arduino/write/integral/" + str(self.integral) + "/"
+            addr = self.http_str() + set_str
+            r = requests.get(addr, timeout=self.timeout, proxies=proxies)
+            return r.ok
+        except ConnectionError:
+            return False
+
+    def set_differential(self):
+        try:
+            proxies = {
+                "http": None,
+                "https": None,
+            }
+            set_str = "/arduino/write/differential/" + str(self.diff) + "/"
+            addr = self.http_str() + set_str
+            r = requests.get(addr, timeout=self.timeout, proxies=proxies)
+            return r.ok
+        except ConnectionError:
+            return False

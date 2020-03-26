@@ -45,7 +45,6 @@ class YunTempTab(DeviceTab):
         }
 
         # Create the output objects
-        # self.create_dds_outputs(dds_prop)
         self.create_analog_outputs(analog_props)
 
         # Create widgets for output objects
@@ -57,33 +56,17 @@ class YunTempTab(DeviceTab):
     def initialise_workers(self):
         """Connects the Tab to the worker.
 
-        Not sure about the details to be honest.
-
-        Args:
-            self: Anything else?
-
-        Returns:
-            Nothing really. Just does the binding.
+        Reads out the ip adress of the Yun.
+        Sets the Worker and initializes the properties of the GUI.
         """
         connection_object = self.settings["connection_table"].find_by_name(
             self.device_name
         )
-        #conn_properties = connection_object.properties
 
-        # Store the COM port to be used
+        # Store the target port to be used
+        blacs_connection = str(connection_object.BLACS_connection)
 
-        blacs_connection = str(connection_object.BLACS_connection);
-
-        print(connection_object.BLACS_connection);
-        print('I AM HERE!!!!!!!!!!!!');
-        self.target = blacs_connection;
-        #if "," in blacs_connection:
-        #    self.target, port = blacs_connection.split(",")
-        #    print(self.target)
-        #    self.port = int(port)
-        #else:
-        #   self.target = blacs_connection
-        #    self.port = 5001
+        self.target = blacs_connection
 
         # Create and set the primary worker
         self.create_worker(
