@@ -7,7 +7,7 @@ from labscript import *
 
 from user_devices.YunTemp.labscript_devices import YunTemp
 
-YunTemp(name="temp_control_0", com_port="/dev/ttys004")
+YunTemp(name="temp_control_0", target="http://127.0.0.1:5001/")
 
 start()
 stop(1)

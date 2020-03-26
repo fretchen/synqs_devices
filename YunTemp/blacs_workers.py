@@ -7,7 +7,7 @@ import time
 import labscript_utils.h5_lock
 import h5py
 from blacs.tab_base_classes import Worker
-import socket
+import requests
 import sys
 from userlib.user_devices.YunTemp.helpers.yuntemp import *
 
@@ -28,24 +28,6 @@ class YunTempWorker(Worker):
         rename it to __init__ . There is something specific about Blacs that remains
         a bit mystical to me.
         """
-
-        # Create a TCP/IP socket
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-        # Connect the socket to the port where the server is listening
-        self.connection = sock.connect(
-             (self.target, self.port)
-        )
-        ip = self.connection
-        
-        # every time the device is restarted in BLACS,we reset the arduino after opening the serial port; this is a peculiar nature of our setup.
-        # Note that this reset when called here, doesn't run in every shot.
-        #self.reset_connection(ser)
-        #get_temp()
-
-        # Could send and receive data here to confirm the device is working and do
-        # any initial setup that is not related to any particular shot.
-
         # Each shot, we will remember the shot file for the duration of that shot
         self.shot_file = None
 
@@ -191,5 +173,10 @@ class YunTempWorker(Worker):
             dictionary of remote values, keyed by hardware channel name.
         """
         # Dummy
+        call_string  = self.target + 'arduino/read/all/';
+        r = requests.get(call_string);
+        print(r.text)
+
+        # now we need to parse the values from r.text  into the output_values.
         current_output_values = {"setpoint": 0.0, "P": 0.0, "I": 0.0}
         return current_output_values

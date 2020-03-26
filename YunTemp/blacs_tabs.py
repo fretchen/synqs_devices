@@ -68,22 +68,28 @@ class YunTempTab(DeviceTab):
         connection_object = self.settings["connection_table"].find_by_name(
             self.device_name
         )
-        conn_properties = connection_object.properties
+        #conn_properties = connection_object.properties
 
         # Store the COM port to be used
-        blacs_connection = str(connection_object.BLACS_connection)
-        if "," in blacs_connection:
-            self.target, port = blacs_connection.split(",")
-            self.port = int(port)
-        else:
-            self.target = blacs_connection
-            self.port = 5001
+
+        blacs_connection = str(connection_object.BLACS_connection);
+
+        print(connection_object.BLACS_connection);
+        print('I AM HERE!!!!!!!!!!!!');
+        self.target = blacs_connection;
+        #if "," in blacs_connection:
+        #    self.target, port = blacs_connection.split(",")
+        #    print(self.target)
+        #    self.port = int(port)
+        #else:
+        #   self.target = blacs_connection
+        #    self.port = 5001
 
         # Create and set the primary worker
         self.create_worker(
             "main_worker",
             "user_devices.YunTemp.blacs_workers.YunTempWorker",
-            {"target": self.target, "port": self.port},
+            {"target": self.target},
         )
         self.primary_worker = "main_worker"
 
