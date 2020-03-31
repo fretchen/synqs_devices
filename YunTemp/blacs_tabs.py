@@ -44,19 +44,40 @@ class YunTempTab(DeviceTab):
             },
         }
 
-        # analog_in_props = {
-        #     "value": {
-        #         "base_unit": "V"
-        #     },
-        # }
-        # Create the output objects
-        self.create_analog_outputs(analog_props)
+        analogIn_props = {
+            "Temperature": {
+                "base_unit": "V",
+                "min": 0.0,
+                "max": 1000.0,
+                "step": 1.0,
+                "decimals": 1,
+            },
+            "Error": {
+                "base_unit": "V",
+                "min": 0.0,
+                "max": 1000.0,
+                "step": 1.0,
+                "decimals": 1,
+            },
+            "Output": {
+                "base_unit": "V",
+                "min": 0.0,
+                "max": 1000.0,
+                "step": 1.0,
+                "decimals": 1,
+            },
+        }
 
-        # Create widgets for output objects
-        dds_widgets, ao_widgets, do_widgets = self.auto_create_widgets()
+        # Create the output/input objects
+        self.create_analog_outputs(analog_props)
+        self.create_analog_inputs(analogIn_props)
+
+        # Create widgets for output/input objects
+        dds_widgets, ao_widgets, do_widgets, ai_widgets = self.auto_create_widgets(create_analog_in = True)
 
         # and auto place the widgets in the UI
-        self.auto_place_widgets(ao_widgets)
+        self.auto_place_widgets(("Analog Outputs",ao_widgets),("Analog Inputs",ai_widgets))
+
 
     def initialise_workers(self):
         """Connects the Tab to the worker.
@@ -80,6 +101,13 @@ class YunTempTab(DeviceTab):
             {"target": self.target},
         )
         self.primary_worker = "main_worker"
+
+        self.create_worker(
+            "acquisition_worker",
+            "user_devices.YunTemp.blacs_workers.YunTempAcquisitionWorker",
+            {"target": self.target},
+        )
+        self.add_secondary_worker("acquisition_worker")
 
         # Set the capabilities of this device
         self.supports_remote_value_check(True)
