@@ -5,6 +5,7 @@ The YunTemp exposes the properties of temperature control.
 import h5py
 from labscript import Device, set_passed_properties
 import requests
+from userlib.user_devices.YunTemp.helpers.yuntemp import *
 
 
 class YunTemp(Device):
@@ -25,7 +26,7 @@ class YunTemp(Device):
                 "https": None,
             }
             r = requests.get(
-                self.temp_http_str(),timeout = self.timeout, proxies=proxies
+                self.temp_http_str(), auth = (usern, passw), timeout = self.timeout, proxies=proxies
             )
         except ConnectionError:
             print("No connection")

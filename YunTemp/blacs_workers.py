@@ -113,7 +113,7 @@ class YunTempWorker(Worker):
                 "https": None,
             }
             r = requests.get(
-                self.temp_http_str(), timeout=self.timeout, proxies=proxies
+                self.temp_http_str(), auth = (usern, passw), timeout=self.timeout, proxies=proxies
             )
         except ConnectionError:
             print("No connection")
@@ -234,7 +234,7 @@ class YunTempWorker(Worker):
                 "https": None,
             }
             r = requests.get(
-                self.temp_http_str(), timeout=self.timeout, proxies=proxies
+                self.temp_http_str(), auth = (usern, passw), timeout=self.timeout, proxies=proxies
             )
 
         except ConnectionError:
@@ -254,79 +254,79 @@ class YunTempWorker(Worker):
 
         return self.check_remote_values()
 
-class YunTempAcquisitionWorker(Worker):
-    """The class behind the Input Values. It inherits from Worker.
-
-    It is trying to set up everything to pull in values from the Arduino. However,
-    the documentation is sketchy at best.
-
-
-    Attributes:
-    """
-
-    MAX_READ_INTERVAL = 0.2
-    MAX_READ_PTS = 10000
-
-    def init(self):
-        """Initialize the Worker.
-
-        Initializes the IP socket and resets everything properly. Do NOT
-        rename it to __init__ . There is something specific about Blacs that remains
-        a bit mystical to me.
-        """
-        # Each shot, we will remember the shot file for the duration of that shot
-        self.timeout = 1
-        self.shot_file = None
-
-
-    def check_remote_values(self):
-        """Somehow needed, but not sure what it should do.
-
-        """
-        # Dummy
-        try:
-            proxies = {
-                "http": None,
-                "https": None,
-            }
-            r = requests.get(
-                self.temp_http_str(), timeout=self.timeout, proxies=proxies
-            )
-        except ConnectionError:
-            print("No connection")
-            return 0, 0
-        html_text = r.text
-        lines = html_text.split("<br />")
-        ard_str = lines[1]
-
-        vals = ard_str.split(",")
-        if len(vals) == 7:
-            setpoint =  vals[0]
-            value    =  vals[1]
-            error    =  vals[2]
-            output   =  vals[3]
-            gain     =  vals[4]
-            integral =  vals[5]
-            sp_vals  =  vals[6].split("\r")
-            diff     =  sp_vals[0]
-
-        current_output_values = {
-            "setpoint": float(setpoint),
-            "P": float(gain),
-            "I": float(integral)
-        }
-        return current_output_values
-
-    def abort_buffered(self):
-        print('let me transition to buffered');
-        return self.transition_to_manual(True)
-
-    def abort_transition_to_buffered(self):
-        print('let me transition to buffered');
-        return self.transition_to_manual(True)
-
-    def program_manual(self, values):
-        return {}
-
-    def temp_http_str(self):
-        return self.target + "arduino/read/all/"
+# class YunTempAcquisitionWorker(Worker):
+#     """The class behind the Input Values. It inherits from Worker.
+#
+#     It is trying to set up everything to pull in values from the Arduino. However,
+#     the documentation is sketchy at best.
+#
+#
+#     Attributes:
+#     """
+#
+#     MAX_READ_INTERVAL = 0.2
+#     MAX_READ_PTS = 10000
+#
+#     def init(self):
+#         """Initialize the Worker.
+#
+#         Initializes the IP socket and resets everything properly. Do NOT
+#         rename it to __init__ . There is something specific about Blacs that remains
+#         a bit mystical to me.
+#         """
+#         # Each shot, we will remember the shot file for the duration of that shot
+#         self.timeout = 1
+#         self.shot_file = None
+#
+#
+#     def check_remote_values(self):
+#         """Somehow needed, but not sure what it should do.
+#
+#         """
+#         # Dummy
+#         try:
+#             proxies = {
+#                 "http": None,
+#                 "https": None,
+#             }
+#             r = requests.get(
+#                 self.temp_http_str(), timeout=self.timeout, proxies=proxies
+#             )
+#         except ConnectionError:
+#             print("No connection")
+#             return 0, 0
+#         html_text = r.text
+#         lines = html_text.split("<br />")
+#         ard_str = lines[1]
+#
+#         vals = ard_str.split(",")
+#         if len(vals) == 7:
+#             setpoint =  vals[0]
+#             value    =  vals[1]
+#             error    =  vals[2]
+#             output   =  vals[3]
+#             gain     =  vals[4]
+#             integral =  vals[5]
+#             sp_vals  =  vals[6].split("\r")
+#             diff     =  sp_vals[0]
+#
+#         current_output_values = {
+#             "setpoint": float(setpoint),
+#             "P": float(gain),
+#             "I": float(integral)
+#         }
+#         return current_output_values
+#
+#     def abort_buffered(self):
+#         print('let me transition to buffered');
+#         return self.transition_to_manual(True)
+#
+#     def abort_transition_to_buffered(self):
+#         print('let me transition to buffered');
+#         return self.transition_to_manual(True)
+#
+#     def program_manual(self, values):
+#         return {}
+#
+#     def temp_http_str(self):
+#         return self.target + "arduino/read/all/"

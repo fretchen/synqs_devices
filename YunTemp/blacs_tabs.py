@@ -102,12 +102,12 @@ class YunTempTab(DeviceTab):
         )
         self.primary_worker = "main_worker"
 
-        self.create_worker(
-            "acquisition_worker",
-            "user_devices.YunTemp.blacs_workers.YunTempAcquisitionWorker",
-            {"target": self.target},
-        )
-        self.add_secondary_worker("acquisition_worker")
+        # self.create_worker(
+        #     "acquisition_worker",
+        #     "user_devices.YunTemp.blacs_workers.YunTempAcquisitionWorker",
+        #     {"target": self.target},
+        # )
+        # self.add_secondary_worker("acquisition_worker")
 
         # Set the capabilities of this device
         self.supports_remote_value_check(True)
