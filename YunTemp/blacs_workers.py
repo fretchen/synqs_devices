@@ -13,7 +13,7 @@ from userlib.user_devices.YunTemp.helpers.yuntemp import *
 
 
 class YunTempWorker(Worker):
-    """The class behind the Worker. It inherits from Worker.
+    """The class behind the Output Worker. It inherits from Worker.
 
 
     Attributes:
@@ -34,37 +34,12 @@ class YunTempWorker(Worker):
 
     def __repr__(self):
         """Nice printing format for the YunTempWorker.
+
+        Returns:
+            ret_str: a string that is some key information about the worker.
         """
         ret_str = "<YunTempWorker {}".format(self.target) + ">"
         return ret_str
-
-    def reset_connection(self, ip):
-
-        """ Reset connection.
-
-        This function, when called resets the arduino. Please be aware that the serial port should be open before you call this function.
-        It resets Arduino DUE, and clears everything in its input and reads fresh from the arduino. The arduino when ready for the string
-        to be written for the ramps displays 'Arduino ready', which is displayed in the device in BLACS. If you don't see this, check your code.
-
-        Args:
-            ser: The serial connection to the Arduino.
-
-        Returns:
-            Nothing really.
-        """
-        # print(
-        # self.connection.is_open
-        # )  # check whether the port is open. Displays True in the BLACS device tab
-        ser.setRTS(True)
-        ser.setDTR(True)
-        time.sleep(0.1)
-        ser.setRTS(False)
-        ser.setDTR(False)
-        ser.reset_input_buffer()
-
-        line = ser.readline()
-        ard_str = line[0:-2]
-        print(ard_str)
 
     def transition_to_buffered(self, device_name, h5_file, initial_values, fresh):
         """ Required - Read commands from the shot file and send them to the device.
@@ -128,7 +103,6 @@ class YunTempWorker(Worker):
     def check_remote_values(self):
         """ Called when remote values are checked.
 
-
         Returns:
             dictionary of remote values, keyed by hardware channel name.
         """
@@ -173,15 +147,6 @@ class YunTempWorker(Worker):
     def temp_http_str(self):
         return self.target + "arduino/read/all/"
 
-    def temp_field_str(self):
-        return "read_wtc" + str(self.id)
-
-    def conn_str(self):
-        return "conn_wtc" + str(self.id)
-
-    def startstop_str(self):
-        return "start" + str(self.id)
-
     def is_open(self):
         """ Test if the serial connection is open
         """
@@ -197,7 +162,10 @@ class YunTempWorker(Worker):
             return False
 
     def set_setpoint(self):
-        """Outdated....
+        """Set the setpoint.
+
+        Returns:
+            success of the communication.
         """
         try:
             set_str = "/arduino/write/setpoint/" + str(self.setpoint) + "/"
@@ -253,6 +221,12 @@ class YunTempWorker(Worker):
 
     def program_manual(self,front_panel_values):
         '''Performans manual updates from BLACS front panel.
+
+        Attributes:
+            front_panel_values: Not where they come from.
+
+        Returns:
+            dict: Which are the values the Arduino gives us back after we programmed it.
         '''
         try:
             proxies = {
@@ -268,6 +242,7 @@ class YunTempWorker(Worker):
             return 0, 0
 
         # Update values from front panel
+        print(front_panel_values)
         self.setpoint = front_panel_values['setpoint']
         self.gain     = front_panel_values['P']
         self.integral = front_panel_values['I']
@@ -280,6 +255,15 @@ class YunTempWorker(Worker):
         return self.check_remote_values()
 
 class YunTempAcquisitionWorker(Worker):
+    """The class behind the Input Values. It inherits from Worker.
+
+    It is trying to set up everything to pull in values from the Arduino. However,
+    the documentation is sketchy at best.
+
+
+    Attributes:
+    """
+
     MAX_READ_INTERVAL = 0.2
     MAX_READ_PTS = 10000
 
@@ -296,6 +280,9 @@ class YunTempAcquisitionWorker(Worker):
 
 
     def check_remote_values(self):
+        """Somehow needed, but not sure what it should do.
+
+        """
         # Dummy
         try:
             proxies = {
@@ -331,9 +318,11 @@ class YunTempAcquisitionWorker(Worker):
         return current_output_values
 
     def abort_buffered(self):
+        print('let me transition to buffered');
         return self.transition_to_manual(True)
 
     def abort_transition_to_buffered(self):
+        print('let me transition to buffered');
         return self.transition_to_manual(True)
 
     def program_manual(self, values):

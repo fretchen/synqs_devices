@@ -77,48 +77,70 @@
             <span class="p">},</span>
         <span class="p">}</span>
 
-        <span class="c1"># Create the output objects</span>
-        <span class="c1"># self.create_dds_outputs(dds_prop)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">create_analog_outputs</span><span class="p">(</span><span class="n">analog_props</span><span class="p">)</span>
+        <span class="n">analogIn_props</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Temperature&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;base_unit&quot;</span><span class="p">:</span> <span class="s2">&quot;V&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mf">1000.0</span><span class="p">,</span>
+                <span class="s2">&quot;step&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+                <span class="s2">&quot;decimals&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;Error&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;base_unit&quot;</span><span class="p">:</span> <span class="s2">&quot;V&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mf">1000.0</span><span class="p">,</span>
+                <span class="s2">&quot;step&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+                <span class="s2">&quot;decimals&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;Output&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;base_unit&quot;</span><span class="p">:</span> <span class="s2">&quot;V&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;min&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                <span class="s2">&quot;max&quot;</span><span class="p">:</span> <span class="mf">1000.0</span><span class="p">,</span>
+                <span class="s2">&quot;step&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+                <span class="s2">&quot;decimals&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
 
-        <span class="c1"># Create widgets for output objects</span>
-        <span class="n">dds_widgets</span><span class="p">,</span> <span class="n">ao_widgets</span><span class="p">,</span> <span class="n">do_widgets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auto_create_widgets</span><span class="p">()</span>
+        <span class="c1"># Create the output/input objects</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_analog_outputs</span><span class="p">(</span><span class="n">analog_props</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_analog_inputs</span><span class="p">(</span><span class="n">analogIn_props</span><span class="p">)</span>
+
+        <span class="c1"># Create widgets for output/input objects</span>
+        <span class="n">dds_widgets</span><span class="p">,</span> <span class="n">ao_widgets</span><span class="p">,</span> <span class="n">do_widgets</span><span class="p">,</span> <span class="n">ai_widgets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auto_create_widgets</span><span class="p">(</span><span class="n">create_analog_in</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># and auto place the widgets in the UI</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">auto_place_widgets</span><span class="p">(</span><span class="n">ao_widgets</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">auto_place_widgets</span><span class="p">((</span><span class="s2">&quot;Analog Outputs&quot;</span><span class="p">,</span><span class="n">ao_widgets</span><span class="p">),(</span><span class="s2">&quot;Analog Inputs&quot;</span><span class="p">,</span><span class="n">ai_widgets</span><span class="p">))</span></div>
+
 
 <div class="viewcode-block" id="YunTempTab.initialise_workers"><a class="viewcode-back" href="../../YunTemp.html#YunTemp.blacs_tabs.YunTempTab.initialise_workers">[docs]</a>    <span class="k">def</span> <span class="nf">initialise_workers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Connects the Tab to the worker.</span>
 
-<span class="sd">        Not sure about the details to be honest.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            self: Anything else?</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            Nothing really. Just does the binding.</span>
+<span class="sd">        Reads out the ip adress of the Yun.</span>
+<span class="sd">        Sets the Worker and initializes the properties of the GUI.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">connection_object</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="s2">&quot;connection_table&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">find_by_name</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">device_name</span>
         <span class="p">)</span>
-        <span class="n">conn_properties</span> <span class="o">=</span> <span class="n">connection_object</span><span class="o">.</span><span class="n">properties</span>
 
-        <span class="c1"># Store the COM port to be used</span>
+        <span class="c1"># Store the target port to be used</span>
         <span class="n">blacs_connection</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">connection_object</span><span class="o">.</span><span class="n">BLACS_connection</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s2">&quot;,&quot;</span> <span class="ow">in</span> <span class="n">blacs_connection</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">com_port</span><span class="p">,</span> <span class="n">baud_rate</span> <span class="o">=</span> <span class="n">blacs_connection</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">baud_rate</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">baud_rate</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">com_port</span> <span class="o">=</span> <span class="n">blacs_connection</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">baud_rate</span> <span class="o">=</span> <span class="mi">19200</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="n">blacs_connection</span>
 
         <span class="c1"># Create and set the primary worker</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">create_worker</span><span class="p">(</span>
             <span class="s2">&quot;main_worker&quot;</span><span class="p">,</span>
             <span class="s2">&quot;user_devices.YunTemp.blacs_workers.YunTempWorker&quot;</span><span class="p">,</span>
-            <span class="p">{</span><span class="s2">&quot;com_port&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">com_port</span><span class="p">,</span> <span class="s2">&quot;baud_rate&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">baud_rate</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="p">},</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">primary_worker</span> <span class="o">=</span> <span class="s2">&quot;main_worker&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_worker</span><span class="p">(</span>
+            <span class="s2">&quot;acquisition_worker&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;user_devices.YunTemp.blacs_workers.YunTempAcquisitionWorker&quot;</span><span class="p">,</span>
+            <span class="p">{</span><span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="p">},</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_secondary_worker</span><span class="p">(</span><span class="s2">&quot;acquisition_worker&quot;</span><span class="p">)</span>
 
         <span class="c1"># Set the capabilities of this device</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">supports_remote_value_check</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
