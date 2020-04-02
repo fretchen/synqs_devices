@@ -1,14 +1,10 @@
-"""
-This is where BLACS really connects to the hardware. Everything elso is just sending it here.
+"""This is where BLACS really connects to the hardware.
+
+Everything elso is just sending it here.
 """
 
-import serial
-import time
-import labscript_utils.h5_lock
-import h5py
 from blacs.tab_base_classes import Worker
 import requests
-import sys
 
 class YunTempWorker(Worker):
     """The class behind the Output Worker. It inherits from Worker.
