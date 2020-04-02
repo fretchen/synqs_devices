@@ -22,9 +22,7 @@ class YunTemp(Device):
     @set_passed_properties(
         {"connection_table_properties": ["target", "usern", "passw"]}
     )
-    def __init__(
-        self, name, target="http://127.0.0.1:5001/", usern=None, passw=None, **kwargs
-    ):
+    def __init__(self, name, target="http://127.0.0.1:5001/", usern=None, passw=None, **kwargs):
         """ Initialize the device itself.
 
         Args:
@@ -63,9 +61,9 @@ class YunTemp(Device):
         return self.target + "arduino/read/all/"
 
     def generate_code(self, hdf5_file):
-        """Packs the recorded temperature value into the hdf5 file (into device properties)
+        """Packs the recorded temperature value into the hdf5 file (into device properties).
 
-        Attributes:
+        Args:
             hdf5_file: used file format
         """
         Device.generate_code(self, hdf5_file)

@@ -143,30 +143,10 @@ class YunTempWorker(Worker):
         }
         return current_output_values
 
-    """ The following stuff come from the DeviceControlServer code and more precisely
-    from the WebTempControl model. So no guarantee  that it works right now ...
-    """
-
     def temp_http_str(self):
         """ Return the string representation for getting all vals.
         """
         return self.target + "arduino/read/all/"
-
-    def is_open(self):
-        """ Test if the serial connection is open
-        """
-
-        try:
-            proxies = {
-                "http": None,
-                "https": None,
-            }
-            r = requests.get(
-                self.temp_http_str(), timeout=self.timeout, proxies=proxies
-            )
-            return True
-        except ConnectionError:
-            return False
 
     def set_setpoint(self):
         """Set the setpoint.
