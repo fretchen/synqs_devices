@@ -36,6 +36,7 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">blacs.device_base_class</span> <span class="kn">import</span> <span class="n">DeviceTab</span>
+<span class="kn">import</span> <span class="nn">ast</span>
 
 
 <div class="viewcode-block" id="YunTempTab"><a class="viewcode-back" href="../../YunTemp.html#YunTemp.blacs_tabs.YunTempTab">[docs]</a><span class="k">class</span> <span class="nc">YunTempTab</span><span class="p">(</span><span class="n">DeviceTab</span><span class="p">):</span>
@@ -106,11 +107,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">create_analog_inputs</span><span class="p">(</span><span class="n">analogIn_props</span><span class="p">)</span>
 
         <span class="c1"># Create widgets for output/input objects</span>
-        <span class="n">dds_widgets</span><span class="p">,</span> <span class="n">ao_widgets</span><span class="p">,</span> <span class="n">do_widgets</span><span class="p">,</span> <span class="n">ai_widgets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auto_create_widgets</span><span class="p">(</span><span class="n">create_analog_in</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">dds_widgets</span><span class="p">,</span> <span class="n">ao_widgets</span><span class="p">,</span> <span class="n">do_widgets</span><span class="p">,</span> <span class="n">ai_widgets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auto_create_widgets</span><span class="p">(</span>
+            <span class="n">create_analog_in</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
 
         <span class="c1"># and auto place the widgets in the UI</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">auto_place_widgets</span><span class="p">((</span><span class="s2">&quot;Analog Outputs&quot;</span><span class="p">,</span><span class="n">ao_widgets</span><span class="p">),(</span><span class="s2">&quot;Analog Inputs&quot;</span><span class="p">,</span><span class="n">ai_widgets</span><span class="p">))</span></div>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">auto_place_widgets</span><span class="p">(</span>
+            <span class="p">(</span><span class="s2">&quot;Analog Outputs&quot;</span><span class="p">,</span> <span class="n">ao_widgets</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;Analog Inputs&quot;</span><span class="p">,</span> <span class="n">ai_widgets</span><span class="p">)</span>
+        <span class="p">)</span></div>
 
 <div class="viewcode-block" id="YunTempTab.initialise_workers"><a class="viewcode-back" href="../../YunTemp.html#YunTemp.blacs_tabs.YunTempTab.initialise_workers">[docs]</a>    <span class="k">def</span> <span class="nf">initialise_workers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Connects the Tab to the worker.</span>
@@ -124,23 +128,22 @@
 
         <span class="c1"># Store the target port to be used</span>
         <span class="n">blacs_connection</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">connection_object</span><span class="o">.</span><span class="n">BLACS_connection</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">target</span> <span class="o">=</span> <span class="n">blacs_connection</span>
-
+        <span class="n">blacs_conn_dict</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">blacs_connection</span><span class="p">)</span>
+        
         <span class="c1"># Create and set the primary worker</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">create_worker</span><span class="p">(</span>
             <span class="s2">&quot;main_worker&quot;</span><span class="p">,</span>
             <span class="s2">&quot;user_devices.YunTemp.blacs_workers.YunTempWorker&quot;</span><span class="p">,</span>
-            <span class="p">{</span><span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="p">},</span>
+            <span class="n">blacs_conn_dict</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">primary_worker</span> <span class="o">=</span> <span class="s2">&quot;main_worker&quot;</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">create_worker</span><span class="p">(</span>
-            <span class="s2">&quot;acquisition_worker&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;user_devices.YunTemp.blacs_workers.YunTempAcquisitionWorker&quot;</span><span class="p">,</span>
-            <span class="p">{</span><span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">target</span><span class="p">},</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_secondary_worker</span><span class="p">(</span><span class="s2">&quot;acquisition_worker&quot;</span><span class="p">)</span>
+        <span class="c1"># self.create_worker(</span>
+        <span class="c1">#     &quot;acquisition_worker&quot;,</span>
+        <span class="c1">#     &quot;user_devices.YunTemp.blacs_workers.YunTempAcquisitionWorker&quot;,</span>
+        <span class="c1">#     {&quot;target&quot;: self.target},</span>
+        <span class="c1"># )</span>
+        <span class="c1"># self.add_secondary_worker(&quot;acquisition_worker&quot;)</span>
 
         <span class="c1"># Set the capabilities of this device</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">supports_remote_value_check</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
