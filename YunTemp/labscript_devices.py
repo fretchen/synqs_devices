@@ -2,11 +2,9 @@
 
 The YunTemp exposes the properties of temperature control.
 """
-import h5py
+
 from labscript import Device, set_passed_properties
 import requests
-from userlib.user_devices.YunTemp.helpers.yuntemp import *
-
 
 class YunTemp(Device):
     """ The device class which we interact with in our experiment files.

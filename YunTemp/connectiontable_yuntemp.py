@@ -3,7 +3,7 @@
 This is the minimal sample that you can load from runmanager to see if your code is working properly.
 """
 
-from labscript import *
+from labscript import start, stop
 
 from user_devices.YunTemp.labscript_devices import YunTemp
 
