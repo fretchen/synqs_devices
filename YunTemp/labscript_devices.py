@@ -6,6 +6,7 @@ The YunTemp exposes the properties of temperature control.
 from labscript import Device, set_passed_properties
 import requests
 
+
 class YunTemp(Device):
     """ The device class which we interact with in our experiment files.
 
@@ -20,7 +21,9 @@ class YunTemp(Device):
     @set_passed_properties(
         {"connection_table_properties": ["target", "usern", "passw"]}
     )
-    def __init__(self, name, target="http://127.0.0.1:5001/", usern=None, passw=None, **kwargs):
+    def __init__(
+        self, name, target="http://127.0.0.1:5001/", usern=None, passw=None, **kwargs
+    ):
         """ Initialize the device itself.
 
         Args:

@@ -96,7 +96,7 @@ class YunTempTab(DeviceTab):
         # Store the target port to be used
         blacs_connection = str(connection_object.BLACS_connection)
         blacs_conn_dict = ast.literal_eval(blacs_connection)
-        
+
         # Create and set the primary worker
         self.create_worker(
             "main_worker",

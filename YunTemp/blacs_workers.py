@@ -6,6 +6,7 @@ Everything elso is just sending it here.
 from blacs.tab_base_classes import Worker
 import requests
 
+
 class YunTempWorker(Worker):
     """The class behind the Output Worker. It inherits from Worker.
 
