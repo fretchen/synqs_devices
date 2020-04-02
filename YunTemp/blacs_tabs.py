@@ -3,6 +3,7 @@
 """
 
 from blacs.device_base_class import DeviceTab
+import ast
 
 
 class YunTempTab(DeviceTab):
@@ -73,11 +74,14 @@ class YunTempTab(DeviceTab):
         self.create_analog_inputs(analogIn_props)
 
         # Create widgets for output/input objects
-        dds_widgets, ao_widgets, do_widgets, ai_widgets = self.auto_create_widgets(create_analog_in = True)
+        dds_widgets, ao_widgets, do_widgets, ai_widgets = self.auto_create_widgets(
+            create_analog_in=True
+        )
 
         # and auto place the widgets in the UI
-        self.auto_place_widgets(("Analog Outputs",ao_widgets),("Analog Inputs",ai_widgets))
-
+        self.auto_place_widgets(
+            ("Analog Outputs", ao_widgets), ("Analog Inputs", ai_widgets)
+        )
 
     def initialise_workers(self):
         """Connects the Tab to the worker.
@@ -91,14 +95,13 @@ class YunTempTab(DeviceTab):
 
         # Store the target port to be used
         blacs_connection = str(connection_object.BLACS_connection)
-
-        self.target = blacs_connection
-
+        blacs_conn_dict = ast.literal_eval(blacs_connection)
+        
         # Create and set the primary worker
         self.create_worker(
             "main_worker",
             "user_devices.YunTemp.blacs_workers.YunTempWorker",
-            {"target": self.target},
+            blacs_conn_dict,
         )
         self.primary_worker = "main_worker"
 

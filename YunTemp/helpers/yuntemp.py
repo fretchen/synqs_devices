@@ -27,9 +27,9 @@ app = Flask(__name__)
 
 
 ### uncomment the next few lines to test the authentification on the Yun
-app.config['BASIC_AUTH_USERNAME'] = 'john'
-app.config['BASIC_AUTH_PASSWORD'] = 'matrix'
-app.config['BASIC_AUTH_FORCE'] = True
+app.config["BASIC_AUTH_USERNAME"] = "john"
+app.config["BASIC_AUTH_PASSWORD"] = "matrix"
+app.config["BASIC_AUTH_FORCE"] = True
 
 # basic_auth = BasicAuth(app)
 
@@ -39,8 +39,6 @@ tauI = 0
 err = 0
 control = 0
 tauD = 0
-usern = 'john'
-passw = 'matrix'
 
 
 @app.route("/arduino/read/all/")

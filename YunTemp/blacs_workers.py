@@ -9,8 +9,6 @@ import h5py
 from blacs.tab_base_classes import Worker
 import requests
 import sys
-from userlib.user_devices.YunTemp.helpers.yuntemp import *
-
 
 class YunTempWorker(Worker):
     """The class behind the Output Worker. It inherits from Worker.
@@ -75,6 +73,8 @@ class YunTempWorker(Worker):
 
     def shutdown(self):
         """ Called when BLACS closes.
+
+        We are not using it here right now.
         """
 
         # does this make any sense for us ???
@@ -113,7 +113,10 @@ class YunTempWorker(Worker):
                 "https": None,
             }
             r = requests.get(
-                self.temp_http_str(), auth = (usern, passw), timeout=self.timeout, proxies=proxies
+                self.temp_http_str(),
+                auth=(self.usern, self.passw),
+                timeout=self.timeout,
+                proxies=proxies,
             )
         except ConnectionError:
             print("No connection")
@@ -124,14 +127,14 @@ class YunTempWorker(Worker):
 
         vals = ard_str.split(",")
         if len(vals) == 7:
-            setpoint =  vals[0]
-            value    =  vals[1]
-            error    =  vals[2]
-            output   =  vals[3]
-            gain     =  vals[4]
-            integral =  vals[5]
-            sp_vals  =  vals[6].split("\r")
-            diff     =  sp_vals[0]
+            setpoint = vals[0]
+            value = vals[1]
+            error = vals[2]
+            output = vals[3]
+            gain = vals[4]
+            integral = vals[5]
+            sp_vals = vals[6].split("\r")
+            diff = sp_vals[0]
 
         current_output_values = {
             "setpoint": float(setpoint),
@@ -145,6 +148,8 @@ class YunTempWorker(Worker):
     """
 
     def temp_http_str(self):
+        """ Return the string representation for getting all vals.
+        """
         return self.target + "arduino/read/all/"
 
     def is_open(self):
@@ -156,7 +161,9 @@ class YunTempWorker(Worker):
                 "http": None,
                 "https": None,
             }
-            r = requests.get(self.temp_http_str(), timeout=self.timeout, proxies=proxies)
+            r = requests.get(
+                self.temp_http_str(), timeout=self.timeout, proxies=proxies
+            )
             return True
         except ConnectionError:
             return False
@@ -180,6 +187,11 @@ class YunTempWorker(Worker):
             return False
 
     def set_gain(self):
+        """Set the proportional.
+
+        Returns:
+            success of the communication.
+        """
         try:
             proxies = {
                 "http": None,
@@ -194,6 +206,11 @@ class YunTempWorker(Worker):
             return False
 
     def set_integral(self):
+        """Set the integral.
+
+        Returns:
+            success of the communication.
+        """
         try:
             proxies = {
                 "http": None,
@@ -219,22 +236,25 @@ class YunTempWorker(Worker):
         except ConnectionError:
             return False
 
-    def program_manual(self,front_panel_values):
-        '''Performans manual updates from BLACS front panel.
+    def program_manual(self, front_panel_values):
+        """Performans manual updates from BLACS front panel.
 
         Attributes:
             front_panel_values: Not where they come from.
 
         Returns:
             dict: Which are the values the Arduino gives us back after we programmed it.
-        '''
+        """
         try:
             proxies = {
                 "http": None,
                 "https": None,
             }
             r = requests.get(
-                self.temp_http_str(), auth = (usern, passw), timeout=self.timeout, proxies=proxies
+                self.temp_http_str(),
+                auth=(self.usern, self.passw),
+                timeout=self.timeout,
+                proxies=proxies,
             )
 
         except ConnectionError:
@@ -243,16 +263,17 @@ class YunTempWorker(Worker):
 
         # Update values from front panel
         print(front_panel_values)
-        self.setpoint = front_panel_values['setpoint']
-        self.gain     = front_panel_values['P']
-        self.integral = front_panel_values['I']
-        #front_panel_values['value'] = self.value
+        self.setpoint = front_panel_values["setpoint"]
+        self.gain = front_panel_values["P"]
+        self.integral = front_panel_values["I"]
+        # front_panel_values['value'] = self.value
         # Program Device to front panel values
         self.set_setpoint()
         self.set_gain()
         self.set_integral()
 
         return self.check_remote_values()
+
 
 # class YunTempAcquisitionWorker(Worker):
 #     """The class behind the Input Values. It inherits from Worker.

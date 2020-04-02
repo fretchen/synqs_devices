@@ -7,7 +7,9 @@ from labscript import *
 
 from user_devices.YunTemp.labscript_devices import YunTemp
 
-YunTemp(name="temp_control_0", target="http://127.0.0.1:5001/")
+YunTemp(
+    name="temp_control_0", target="http://127.0.0.1:5001/", usern="john", passw="matrix"
+)
 
 start()
 stop(1)
