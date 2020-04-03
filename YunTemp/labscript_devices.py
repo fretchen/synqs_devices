@@ -22,7 +22,7 @@ class YunTemp(Device):
         {"connection_table_properties": ["target", "usern", "passw"]}
     )
     def __init__(
-        self, name, target="http://129.206.182.60/", usern='root', passw='egbvlh!', **kwargs
+        self, name, target="http://129.206.182.60/", usern='root', passw=None, **kwargs
     ):
         """ Initialize the device itself.
 

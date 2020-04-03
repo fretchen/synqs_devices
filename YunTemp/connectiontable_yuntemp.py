@@ -8,7 +8,7 @@ from labscript import start, stop
 from user_devices.YunTemp.labscript_devices import YunTemp
 
 YunTemp(
-    name="temp_control_0", target="http://129.206.182.60/", usern='root', passw='egbvlh!'
+    name="temp_control_0", target="http://129.206.182.60/", usern='root', passw=None
 )
 
 start()
