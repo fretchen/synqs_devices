@@ -24,7 +24,7 @@ class YunTempWorker(Worker):
         a bit mystical to me.
         """
         # Each shot, we will remember the shot file for the duration of that shot
-        self.timeout = 1
+        self.timeout = 10
         self.shot_file = None
 
     def __repr__(self):
@@ -152,13 +152,18 @@ class YunTempWorker(Worker):
             success of the communication.
         """
         try:
-            set_str = "/arduino/write/setpoint/" + str(self.setpoint) + "/"
+            set_str = "arduino/write/setpoint/" + str(self.setpoint) + "/"
             addr = self.target + set_str
             proxies = {
                 "http": None,
                 "https": None,
             }
-            r = requests.get(addr, timeout=self.timeout, proxies=proxies)
+            r = requests.get(
+                addr,
+                auth=(self.usern, self.passw),
+                timeout=self.timeout,
+                proxies=proxies
+            )
             return r.ok
         except ConnectionError:
             return False
@@ -175,9 +180,14 @@ class YunTempWorker(Worker):
                 "https": None,
             }
 
-            set_str = "/arduino/write/gain/" + str(self.gain) + "/"
+            set_str = "arduino/write/gain/" + str(self.gain) + "/"
             addr = self.target + set_str
-            r = requests.get(addr, timeout=self.timeout, proxies=proxies)
+            r = requests.get(
+                addr,
+                auth=(self.usern, self.passw),
+                timeout=self.timeout,
+                proxies=proxies
+            )
             return r.ok
         except ConnectionError:
             return False
@@ -193,9 +203,14 @@ class YunTempWorker(Worker):
                 "http": None,
                 "https": None,
             }
-            set_str = "/arduino/write/integral/" + str(self.integral) + "/"
+            set_str = "arduino/write/integral/" + str(self.integral) + "/"
             addr = self.target + set_str
-            r = requests.get(addr, timeout=self.timeout, proxies=proxies)
+            r = requests.get(
+                addr,
+                auth=(self.usern, self.passw),
+                timeout=self.timeout,
+                proxies=proxies
+            )
             return r.ok
         except ConnectionError:
             return False
@@ -206,9 +221,14 @@ class YunTempWorker(Worker):
                 "http": None,
                 "https": None,
             }
-            set_str = "/arduino/write/differential/" + str(self.diff) + "/"
+            set_str = "arduino/write/differential/" + str(self.diff) + "/"
             addr = self.target + set_str
-            r = requests.get(addr, timeout=self.timeout, proxies=proxies)
+            r = requests.get(
+                addr,
+                auth=(self.usern, self.passw),
+                timeout=self.timeout,
+                proxies=proxies
+            )
             return r.ok
         except ConnectionError:
             return False
@@ -239,17 +259,16 @@ class YunTempWorker(Worker):
             return 0, 0
 
         # Update values from front panel
-        print(front_panel_values)
         self.setpoint = front_panel_values["setpoint"]
         self.gain = front_panel_values["P"]
         self.integral = front_panel_values["I"]
-        # front_panel_values['value'] = self.value
+
         # Program Device to front panel values
         self.set_setpoint()
         self.set_gain()
         self.set_integral()
-
-        return self.check_remote_values()
+        
+        return front_panel_values
 
 
 # class YunTempAcquisitionWorker(Worker):

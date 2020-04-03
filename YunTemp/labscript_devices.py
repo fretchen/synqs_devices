@@ -22,7 +22,7 @@ class YunTemp(Device):
         {"connection_table_properties": ["target", "usern", "passw"]}
     )
     def __init__(
-        self, name, target="http://127.0.0.1:5001/", usern=None, passw=None, **kwargs
+        self, name, target="http://129.206.182.60/", usern='root', passw='egbvlh!', **kwargs
     ):
         """ Initialize the device itself.
 
@@ -34,7 +34,7 @@ class YunTemp(Device):
         """
         Device.__init__(self, name=name, parent_device=None, connection=None, **kwargs)
         self.value = 0
-        self.timeout = 1
+        self.timeout = 10
         self.target = target
         # do we still need this part here ?
         try:
