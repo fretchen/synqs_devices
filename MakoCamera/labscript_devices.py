@@ -13,6 +13,6 @@
 
 from labscript_devices.IMAQdxCamera.labscript_devices import IMAQdxCamera
 
-class MakoCamera(IMAQdxCamera):
-    description = 'Mako Camera'
 
+class MakoCamera(IMAQdxCamera):
+    description = "Mako Camera"
