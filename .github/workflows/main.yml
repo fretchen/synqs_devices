@@ -25,3 +25,5 @@ jobs:
     # make sure that we format the repo with black
     - name: Black Code Formatter
       uses: lgeiger/black-action@v1.0.1
+      with:
+        args: . --check
