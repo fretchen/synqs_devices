@@ -1,6 +1,8 @@
 README for synqs_devices
 ========================
-
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+    :target: https://github.com/psf/black
+    
 `Labscript <https://groups.google.com/forum/?nomobile=true#!forum/labscriptsuite>`_ devices as used at `SynQS <https://www.kip.uni-heidelberg.de/synqs/>`_.
 
 Devices include:
