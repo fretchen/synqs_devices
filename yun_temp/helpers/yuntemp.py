@@ -19,29 +19,29 @@ This will open a test server on 127.0.0.1:5001. You can then adress it with the 
     'setpoint, input, error, output, G, tauI, tauD <br />0,719,0,0,0,0,0'
 """
 
-from flask import Flask, request, jsonify
-from flask_basicauth import BasicAuth
 import random
+from flask import Flask  # , request, jsonify
+from flask_basicauth import BasicAuth
 
-app = Flask(__name__)
+APP = Flask(__name__)
 
 
 ### uncomment the next few lines to test the authentification on the Yun
-app.config["BASIC_AUTH_USERNAME"] = "john"
-app.config["BASIC_AUTH_PASSWORD"] = "matrix"
-app.config["BASIC_AUTH_FORCE"] = True
+APP.config["BASIC_AUTH_USERNAME"] = "john"
+APP.config["BASIC_AUTH_PASSWORD"] = "matrix"
+APP.config["BASIC_AUTH_FORCE"] = True
 
-# basic_auth = BasicAuth(app)
+BASIC_AUTH = BasicAuth(APP)
 
-setpoint = 0
-gain = 0
-tauI = 0
-err = 0
-control = 0
-tauD = 0
+SETPOINT = 0
+GAIN = 0
+TAU_I = 0
+ERR = 0
+CONTROL = 0
+TAU_D = 0
 
 
-@app.route("/arduino/read/all/")
+@APP.route("/arduino/read/all/")
 def get_temp():
     """Read out all properties from the arduino.
 
@@ -51,16 +51,16 @@ def get_temp():
         a text string.
     """
     meas = random.randint(700, 800)
-    global setpoint, gain, tauI, err, control, tauD
-    print(setpoint)
+    global SETPOINT, GAIN, TAU_I, ERR, CONTROL, TAU_D
+    print(SETPOINT)
     first_line = "setpoint, input, error, output, G, tauI, tauD <br />"
-    ard_str = str(setpoint) + "," + str(meas) + "," + str(err) + "," + str(control)
-    ard_str = ard_str + "," + str(gain) + "," + str(tauI) + "," + str(tauD)
+    ard_str = str(SETPOINT) + "," + str(meas) + "," + str(ERR) + "," + str(CONTROL)
+    ard_str = ard_str + "," + str(GAIN) + "," + str(TAU_I) + "," + str(TAU_D)
 
     return first_line + ard_str
 
 
-@app.route("/arduino/write/setpoint/<float:n_val>/")
+@APP.route("/arduino/write/setpoint/<float:n_val>/")
 def set_setpoint(n_val):
     """Set the setpoint of the temp control.
 
@@ -70,18 +70,18 @@ def set_setpoint(n_val):
     Returns:
         a text string.
     """
-    global setpoint, gain, tauI, err, control, tauD
-    setpoint = n_val
-    print(setpoint)
+    global SETPOINT, GAIN, TAU_I, ERR, CONTROL, TAU_D
+    SETPOINT = n_val
+    print(SETPOINT)
     meas = random.randint(700, 800)
     first_line = "setpoint, input, error, output, G, tauI, tauD <br />"
-    ard_str = str(setpoint) + "," + str(meas) + "," + str(err) + "," + str(control)
-    ard_str = ard_str + "," + str(gain) + "," + str(tauI) + "," + str(tauD)
+    ard_str = str(SETPOINT) + "," + str(meas) + "," + str(ERR) + "," + str(CONTROL)
+    ard_str = ard_str + "," + str(GAIN) + "," + str(TAU_I) + "," + str(TAU_D)
 
     return first_line + ard_str
 
 
-@app.route("/arduino/write/integral/<float:n_val>/")
+@APP.route("/arduino/write/integral/<float:n_val>/")
 def set_integral(n_val):
     """Set the integrator of the temp control.
 
@@ -91,18 +91,18 @@ def set_integral(n_val):
     Returns:
         a text string.
     """
-    global setpoint, gain, tauI, err, control, tauD
-    tauI = n_val
-    print(tauI)
+    global SETPOINT, GAIN, TAU_I, ERR, CONTROL, TAU_D
+    TAU_I = n_val
+    print(TAU_I)
     meas = random.randint(700, 800)
     first_line = "setpoint, input, error, output, G, tauI, tauD <br />"
-    ard_str = str(setpoint) + "," + str(meas) + "," + str(err) + "," + str(control)
-    ard_str = ard_str + "," + str(gain) + "," + str(tauI) + "," + str(tauD)
+    ard_str = str(SETPOINT) + "," + str(meas) + "," + str(ERR) + "," + str(CONTROL)
+    ard_str = ard_str + "," + str(GAIN) + "," + str(TAU_I) + "," + str(TAU_D)
 
     return first_line + ard_str
 
 
-@app.route("/arduino/write/differential/<float:n_val>/")
+@APP.route("/arduino/write/differential/<float:n_val>/")
 def set_differential(n_val):
     """Set the D of the temp control.
 
@@ -112,18 +112,18 @@ def set_differential(n_val):
     Returns:
         a text string.
     """
-    global setpoint, gain, tauI, err, control, tauD
-    tauD = n_val
-    print(tauD)
+    global SETPOINT, GAIN, TAU_I, ERR, CONTROL, TAU_D
+    TAU_D = n_val
+    print(TAU_D)
     meas = random.randint(700, 800)
     first_line = "setpoint, input, error, output, G, tauI, tauD <br />"
-    ard_str = str(setpoint) + "," + str(meas) + "," + str(err) + "," + str(control)
-    ard_str = ard_str + "," + str(gain) + "," + str(tauI) + "," + str(tauD)
+    ard_str = str(SETPOINT) + "," + str(meas) + "," + str(ERR) + "," + str(CONTROL)
+    ard_str = ard_str + "," + str(GAIN) + "," + str(TAU_I) + "," + str(TAU_D)
 
     return first_line + ard_str
 
 
-@app.route("/arduino/write/gain/<float:n_val>/")
+@APP.route("/arduino/write/gain/<float:n_val>/")
 def set_gain(n_val):
     """Set the proportional of the temp control.
 
@@ -133,16 +133,16 @@ def set_gain(n_val):
     Returns:
         a text string.
     """
-    global setpoint, gain, tauI, err, control, tauD
-    gain = n_val
-    print(gain)
+    global SETPOINT, GAIN, TAU_I, ERR, CONTROL, TAU_D
+    GAIN = n_val
+    print(GAIN)
     meas = random.randint(700, 800)
     first_line = "setpoint, input, error, output, G, tauI, tauD <br />"
-    ard_str = str(setpoint) + "," + str(meas) + "," + str(err) + "," + str(control)
-    ard_str = ard_str + "," + str(gain) + "," + str(tauI) + "," + str(tauD)
+    ard_str = str(SETPOINT) + "," + str(meas) + "," + str(ERR) + "," + str(CONTROL)
+    ard_str = ard_str + "," + str(GAIN) + "," + str(TAU_I) + "," + str(TAU_D)
 
     return first_line + ard_str
 
 
 if __name__ == "__main__":
-    app.run(port=5001, debug=True)
+    APP.run(port=5001, debug=True)

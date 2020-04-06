@@ -3,8 +3,8 @@
 Everything elso is just sending it here.
 """
 
-from blacs.tab_base_classes import Worker
 import requests
+from blacs.tab_base_classes import Worker
 
 
 class YunTempWorker(Worker):
@@ -15,6 +15,12 @@ class YunTempWorker(Worker):
         connection: Not sure here.
         shot_file: Not sure here.
     """
+
+    shot_file = None
+    timeout = 10
+    setpoint = 0
+    gain = 1
+    integral = 0
 
     def init(self):
         """Initialize the Worker.
@@ -50,7 +56,8 @@ class YunTempWorker(Worker):
         Returns:
             Empty dict.
         """
-
+        # pylint: disable=unused-argument, R0201
+        #
         # This is expected by BLACS, we should return the final values that numerical
         # channels have from th shot - for us we have no channels so this is an empty
         # dictionary
@@ -64,7 +71,7 @@ class YunTempWorker(Worker):
         Returns:
             Empty dict.
         """
-
+        # pylint: disable= R0201
         # This is expected by BLACS to indicate success:
         return True
 
@@ -103,14 +110,14 @@ class YunTempWorker(Worker):
         Returns:
             dictionary of remote values, keyed by hardware channel name.
         """
-        # Dummy
         try:
+            addr = self.target + "arduino/read/all/"
             proxies = {
                 "http": None,
                 "https": None,
             }
-            r = requests.get(
-                self.temp_http_str(),
+            req = requests.get(
+                addr,
                 auth=(self.usern, self.passw),
                 timeout=self.timeout,
                 proxies=proxies,
@@ -118,32 +125,48 @@ class YunTempWorker(Worker):
         except ConnectionError:
             print("No connection")
             return 0, 0
-        html_text = r.text
+        html_text = req.text
         lines = html_text.split("<br />")
         ard_str = lines[1]
 
         vals = ard_str.split(",")
         if len(vals) == 7:
             setpoint = vals[0]
-            value = vals[1]
-            error = vals[2]
-            output = vals[3]
             gain = vals[4]
             integral = vals[5]
-            sp_vals = vals[6].split("\r")
-            diff = sp_vals[0]
 
         current_output_values = {
             "setpoint": float(setpoint),
             "P": float(gain),
             "I": float(integral),
         }
+
         return current_output_values
 
-    def temp_http_str(self):
-        """ Return the string representation for getting all vals.
+    def set_value(self, set_str):
+        """A wrapper, which sends the string to the Arduino.
+
+        Args:
+            set_str: the string to be sent through http
+
+        Returns:
+            success of the communication.
         """
-        return self.target + "arduino/read/all/"
+        try:
+            addr = self.target + set_str
+            proxies = {
+                "http": None,
+                "https": None,
+            }
+            req = requests.get(
+                addr,
+                auth=(self.usern, self.passw),
+                timeout=self.timeout,
+                proxies=proxies,
+            )
+            return req.ok
+        except ConnectionError:
+            return False
 
     def set_setpoint(self):
         """Set the setpoint.
@@ -151,22 +174,8 @@ class YunTempWorker(Worker):
         Returns:
             success of the communication.
         """
-        try:
-            set_str = "arduino/write/setpoint/" + str(self.setpoint) + "/"
-            addr = self.target + set_str
-            proxies = {
-                "http": None,
-                "https": None,
-            }
-            r = requests.get(
-                addr,
-                auth=(self.usern, self.passw),
-                timeout=self.timeout,
-                proxies=proxies
-            )
-            return r.ok
-        except ConnectionError:
-            return False
+        set_str = "arduino/write/setpoint/" + str(self.setpoint) + "/"
+        self.set_value(set_str)
 
     def set_gain(self):
         """Set the proportional.
@@ -174,23 +183,8 @@ class YunTempWorker(Worker):
         Returns:
             success of the communication.
         """
-        try:
-            proxies = {
-                "http": None,
-                "https": None,
-            }
-
-            set_str = "arduino/write/gain/" + str(self.gain) + "/"
-            addr = self.target + set_str
-            r = requests.get(
-                addr,
-                auth=(self.usern, self.passw),
-                timeout=self.timeout,
-                proxies=proxies
-            )
-            return r.ok
-        except ConnectionError:
-            return False
+        set_str = "arduino/write/gain/" + str(self.gain) + "/"
+        self.set_value(set_str)
 
     def set_integral(self):
         """Set the integral.
@@ -198,40 +192,17 @@ class YunTempWorker(Worker):
         Returns:
             success of the communication.
         """
-        try:
-            proxies = {
-                "http": None,
-                "https": None,
-            }
-            set_str = "arduino/write/integral/" + str(self.integral) + "/"
-            addr = self.target + set_str
-            r = requests.get(
-                addr,
-                auth=(self.usern, self.passw),
-                timeout=self.timeout,
-                proxies=proxies
-            )
-            return r.ok
-        except ConnectionError:
-            return False
+        set_str = "arduino/write/integral/" + str(self.integral) + "/"
+        self.set_value(set_str)
 
     def set_differential(self):
-        try:
-            proxies = {
-                "http": None,
-                "https": None,
-            }
-            set_str = "arduino/write/differential/" + str(self.diff) + "/"
-            addr = self.target + set_str
-            r = requests.get(
-                addr,
-                auth=(self.usern, self.passw),
-                timeout=self.timeout,
-                proxies=proxies
-            )
-            return r.ok
-        except ConnectionError:
-            return False
+        """Set the differential.
+
+        Returns:
+            success of the communication.
+        """
+        set_str = "arduino/write/differential/" + str(self.diff) + "/"
+        self.set_value(set_str)
 
     def program_manual(self, front_panel_values):
         """Performans manual updates from BLACS front panel.
@@ -242,22 +213,6 @@ class YunTempWorker(Worker):
         Returns:
             dict: Which are the values the Arduino gives us back after we programmed it.
         """
-        try:
-            proxies = {
-                "http": None,
-                "https": None,
-            }
-            r = requests.get(
-                self.temp_http_str(),
-                auth=(self.usern, self.passw),
-                timeout=self.timeout,
-                proxies=proxies,
-            )
-
-        except ConnectionError:
-            print("No connection")
-            return 0, 0
-
         # Update values from front panel
         self.setpoint = front_panel_values["setpoint"]
         self.gain = front_panel_values["P"]
@@ -267,83 +222,5 @@ class YunTempWorker(Worker):
         self.set_setpoint()
         self.set_gain()
         self.set_integral()
-        
+
         return front_panel_values
-
-
-# class YunTempAcquisitionWorker(Worker):
-#     """The class behind the Input Values. It inherits from Worker.
-#
-#     It is trying to set up everything to pull in values from the Arduino. However,
-#     the documentation is sketchy at best.
-#
-#
-#     Attributes:
-#     """
-#
-#     MAX_READ_INTERVAL = 0.2
-#     MAX_READ_PTS = 10000
-#
-#     def init(self):
-#         """Initialize the Worker.
-#
-#         Initializes the IP socket and resets everything properly. Do NOT
-#         rename it to __init__ . There is something specific about Blacs that remains
-#         a bit mystical to me.
-#         """
-#         # Each shot, we will remember the shot file for the duration of that shot
-#         self.timeout = 1
-#         self.shot_file = None
-#
-#
-#     def check_remote_values(self):
-#         """Somehow needed, but not sure what it should do.
-#
-#         """
-#         # Dummy
-#         try:
-#             proxies = {
-#                 "http": None,
-#                 "https": None,
-#             }
-#             r = requests.get(
-#                 self.temp_http_str(), timeout=self.timeout, proxies=proxies
-#             )
-#         except ConnectionError:
-#             print("No connection")
-#             return 0, 0
-#         html_text = r.text
-#         lines = html_text.split("<br />")
-#         ard_str = lines[1]
-#
-#         vals = ard_str.split(",")
-#         if len(vals) == 7:
-#             setpoint =  vals[0]
-#             value    =  vals[1]
-#             error    =  vals[2]
-#             output   =  vals[3]
-#             gain     =  vals[4]
-#             integral =  vals[5]
-#             sp_vals  =  vals[6].split("\r")
-#             diff     =  sp_vals[0]
-#
-#         current_output_values = {
-#             "setpoint": float(setpoint),
-#             "P": float(gain),
-#             "I": float(integral)
-#         }
-#         return current_output_values
-#
-#     def abort_buffered(self):
-#         print('let me transition to buffered');
-#         return self.transition_to_manual(True)
-#
-#     def abort_transition_to_buffered(self):
-#         print('let me transition to buffered');
-#         return self.transition_to_manual(True)
-#
-#     def program_manual(self, values):
-#         return {}
-#
-#     def temp_http_str(self):
-#         return self.target + "arduino/read/all/"

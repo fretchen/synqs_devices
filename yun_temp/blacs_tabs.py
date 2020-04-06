@@ -1,9 +1,8 @@
 """The file that generates the GUI for the YunTemp.
 
 """
-
-from blacs.device_base_class import DeviceTab
 import ast
+from blacs.device_base_class import DeviceTab
 
 
 class YunTempTab(DeviceTab):
@@ -45,7 +44,7 @@ class YunTempTab(DeviceTab):
             },
         }
 
-        analogIn_props = {
+        analog_in_props = {
             "Temperature": {
                 "base_unit": "V",
                 "min": 0.0,
@@ -71,12 +70,10 @@ class YunTempTab(DeviceTab):
 
         # Create the output/input objects
         self.create_analog_outputs(analog_props)
-        self.create_analog_inputs(analogIn_props)
+        self.create_analog_inputs(analog_in_props)
 
         # Create widgets for output/input objects
-        dds_widgets, ao_widgets, do_widgets, ai_widgets = self.auto_create_widgets(
-            create_analog_in=True
-        )
+        _, ao_widgets, _, ai_widgets = self.auto_create_widgets(create_analog_in=True)
 
         # and auto place the widgets in the UI
         self.auto_place_widgets(
@@ -100,17 +97,10 @@ class YunTempTab(DeviceTab):
         # Create and set the primary worker
         self.create_worker(
             "main_worker",
-            "user_devices.YunTemp.blacs_workers.YunTempWorker",
+            "user_devices.yun_temp.blacs_workers.YunTempWorker",
             blacs_conn_dict,
         )
         self.primary_worker = "main_worker"
-
-        # self.create_worker(
-        #     "acquisition_worker",
-        #     "user_devices.YunTemp.blacs_workers.YunTempAcquisitionWorker",
-        #     {"target": self.target},
-        # )
-        # self.add_secondary_worker("acquisition_worker")
 
         # Set the capabilities of this device
         self.supports_remote_value_check(True)

@@ -3,8 +3,8 @@
 The YunTemp exposes the properties of temperature control.
 """
 
-from labscript import Device, set_passed_properties
 import requests
+from labscript import Device, set_passed_properties
 
 
 class YunTemp(Device):
@@ -22,7 +22,7 @@ class YunTemp(Device):
         {"connection_table_properties": ["target", "usern", "passw"]}
     )
     def __init__(
-        self, name, target="http://129.206.182.60/", usern='root', passw=None, **kwargs
+        self, name, target="http://129.206.182.60/", usern="root", passw=None, **kwargs
     ):
         """ Initialize the device itself.
 
@@ -37,29 +37,23 @@ class YunTemp(Device):
         self.timeout = 10
         self.target = target
         # do we still need this part here ?
+        addr = self.target + "arduino/read/all/"
         try:
             proxies = {
                 "http": None,
                 "https": None,
             }
-            r = requests.get(
-                self.temp_http_str(),
-                auth=(usern, passw),
-                timeout=self.timeout,
-                proxies=proxies,
+            req = requests.get(
+                addr, auth=(usern, passw), timeout=self.timeout, proxies=proxies,
             )
         except ConnectionError:
             print("No connection")
-            return 0, 0
-        html_text = r.text
+        html_text = req.text
         lines = html_text.split("<br />")
         ard_str = lines[1]
         vals = ard_str.split(",")
         self.value = vals[1]
         self.BLACS_connection = {"target": target, "usern": usern, "passw": passw}
-
-    def temp_http_str(self):
-        return self.target + "arduino/read/all/"
 
     def generate_code(self, hdf5_file):
         """Packs the recorded temperature value into the hdf5 file (into device properties).
@@ -68,7 +62,7 @@ class YunTemp(Device):
             hdf5_file: used file format
         """
         Device.generate_code(self, hdf5_file)
-        group = self.init_device_group(hdf5_file)
+        self.init_device_group(hdf5_file)
         self.set_property(
             "Temperature", float(self.value), location="device_properties"
         )
