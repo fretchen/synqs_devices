@@ -1,6 +1,6 @@
 #####################################################################
 #                                                                   #
-# /labscript_devices/MakoCamera/labscript_devices.py               #
+# /labscript_devices/AndorSolis/register_classes.py                 #
 #                                                                   #
 # Copyright 2019, Monash University and contributors                #
 #                                                                   #
@@ -10,11 +10,10 @@
 # the project for the full license.                                 #
 #                                                                   #
 #####################################################################
-"""Import labscript devices"""
-from labscript_devices.IMAQdxCamera.labscript_devices import IMAQdxCamera
+from labscript_devices import register_classes
 
-
-class Mako_Camera(IMAQdxCamera):
-    """Sub-class IMAQdxCamera"""
-
-    description = "Mako Camera"
+register_classes(
+    'AndorSolis',
+    BLACS_tab='labscript_devices.AndorSolis.blacs_tabs.AndorSolisTab',
+    runviewer_parser=None,
+)

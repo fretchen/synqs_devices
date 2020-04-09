@@ -10,10 +10,11 @@
 # the project for the full license.                                 #
 #                                                                   #
 #####################################################################
+"""Import register classes"""
 from labscript_devices import register_classes
 
 register_classes(
-    "MakoCamera",
+    "Mako_Camera",
     BLACS_tab="user_devices.MakoCamera.blacs_tabs.MakoCameraTab",
     runviewer_parser=None,
 )

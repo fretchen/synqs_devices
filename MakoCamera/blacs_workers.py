@@ -13,10 +13,8 @@
 
 # Original imaqdx_camera server by dt, with modifications by rpanderson and cbillington.
 
-# import numpy as np
-from labscript_utils import dedent
-
-# from time import sleep
+"""Import IMAQdx worker"""
+# from labscript_utils import dedent
 from labscript_devices.IMAQdxCamera.blacs_workers import IMAQdxCameraWorker
 
 # Don't import API yet so as not to throw an error, allow worker to run as a dummy
@@ -26,6 +24,8 @@ VimbaException = None
 
 
 class Mako_Camera(object):
+    """This class contains function for controlling the camera."""
+
     def __init__(self, serial_number):
         global Vimba
         global VimbaException
@@ -36,17 +36,18 @@ class Mako_Camera(object):
         self.itr = 0
         vimba = Vimba()
         vimba.startup()
-        sn = str(serial_number)
-        Camera_ID = "50-0" + sn
+        s_n = str(serial_number)
+        camera_id = "50-0" + s_n
         # print(serial_number)
         # serial_number='DEV_000F315C1307'+str(serial_number)'DEV_000F315C57F9''50-0536923001'
         # pos
         self.camera = vimba.camera(
-            Camera_ID
+            camera_id
         )  # vimba.camera_ids()[serial_number])#Device id.
         self.camera.open(camera_access_mode=1)
 
     def set_attributes(self, attributes_dict):
+        """Set attributes value from the dictionary argument."""
         for prop, vals in attributes_dict.items():
             self.set_attribute(prop, vals)
 
@@ -89,6 +90,7 @@ class Mako_Camera(object):
         return value
 
     def snap(self):
+        """Get an image."""
         self.itr = 0
         mako_attributes = {
             "AcquisitionMode": "Continuous",
@@ -112,7 +114,8 @@ class Mako_Camera(object):
             self.camera.disarm()
         return img
 
-    def configure_acquisition(self, continuous=True, bufferCount=7):
+    def configure_acquisition(self, continuous=True, buffer_count=7):
+        """Configure camera for live and triggered mode."""
         mako_attributes = {
             "AcquisitionMode": "Continuous",
             "ExposureMode": "Timed",
@@ -127,7 +130,7 @@ class Mako_Camera(object):
             self.camera.AcquisitionMode = "Continuous"
             one = True
             self.frames = [
-                self.camera.new_frame() for _ in range(bufferCount)
+                self.camera.new_frame() for _ in range(buffer_count)
             ]  # Make a frame buffer.
 
             for self.frame in self.frames:
@@ -172,13 +175,16 @@ class Mako_Camera(object):
             self.camera.AcquisitionStop()
 
     def stop_acquisition(self):
+        """Stop acquisition."""
         self.camera.AcquisitionStop()
         self.camera.disarm()
 
     def abort_acquisition(self):
+        """Abort acquisition."""
         self.camera.AcquisitionAbort()
 
     def close(self):
+        """Close the camera."""
         self.camera.disarm()
         self.camera.close()
 

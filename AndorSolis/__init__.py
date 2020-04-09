@@ -1,6 +1,6 @@
 #####################################################################
 #                                                                   #
-# /labscript_devices/MakoCamera/labscript_devices.py               #
+# /labscript_devices/AndorSolis/__init__.py                         #
 #                                                                   #
 # Copyright 2019, Monash University and contributors                #
 #                                                                   #
@@ -10,11 +10,3 @@
 # the project for the full license.                                 #
 #                                                                   #
 #####################################################################
-"""Import labscript devices"""
-from labscript_devices.IMAQdxCamera.labscript_devices import IMAQdxCamera
-
-
-class Mako_Camera(IMAQdxCamera):
-    """Sub-class IMAQdxCamera"""
-
-    description = "Mako Camera"
