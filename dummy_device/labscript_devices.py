@@ -24,6 +24,7 @@ class DummyDevice(Device):
         """
         Device.__init__(self, name=name, parent_device=None, connection=None, **kwargs)
         self.value = 0
+        self.BLACS_connection = {}  # needs to be defined to compile, perhaps a specific value is is required for correct behaviour
 
     def update_value(self, val):
         """Allows us to update the value of the dummy device.
