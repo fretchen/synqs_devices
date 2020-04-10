@@ -3,8 +3,7 @@
 The YunTemp exposes the properties of temperature control.
 """
 
-import requests
-from labscript import Device, set_passed_properties
+from labscript import Device
 
 
 class DummyDevice(Device):
@@ -22,9 +21,12 @@ class DummyDevice(Device):
         Args:
             name:   Name presented in Blacs.
         """
+        # pylint: disable=C0103
         Device.__init__(self, name=name, parent_device=None, connection=None, **kwargs)
         self.value = 0
-        self.BLACS_connection = {}  # needs to be defined to compile, perhaps a specific value is is required for correct behaviour
+        # needs to be defined to compile, perhaps a specific value is is required
+        # for correct behaviour
+        self.BLACS_connection = {}
 
     def update_value(self, val):
         """Allows us to update the value of the dummy device.
@@ -32,9 +34,7 @@ class DummyDevice(Device):
         Args:
             val: Some value we would like to set there.
         """
-        if not isinstance(command, bytes):
-            raise TypeError("command must be a bytestring")
-        self.start_commands.append(command)
+        self.value = val
 
     def generate_code(self, hdf5_file):
         """Packs the recorded temperature value into the hdf5 file (into device properties).

@@ -1,7 +1,6 @@
 """The file that generates the GUI for the YunTemp.
 
 """
-import ast
 from blacs.device_base_class import DeviceTab
 
 
@@ -20,7 +19,11 @@ class DummyDeviceTab(DeviceTab):
         Returns:
             Nothing really. Just sets things up.
         """
-        pass
+
+    def start_run(self, notify_queue):
+        """Not sure what this is for.
+        """
+        raise NotImplementedError("No method implemented")
 
     def initialise_workers(self):
         """Connects the Tab to the worker.
