@@ -3,6 +3,7 @@
   Typical usage example:
 
   DummyDevice(name="dummy_device_0")
+  dummy_device_0.update_value(9)
 """
 
 import sys

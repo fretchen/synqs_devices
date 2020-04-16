@@ -3,7 +3,6 @@
 Everything elso is just sending it here.
 """
 
-import requests
 from blacs.tab_base_classes import Worker
 
 
@@ -101,6 +100,7 @@ class DummyDeviceWorker(Worker):
         Returns:
             dict: Which are the values the Arduino gives us back after we programmed it.
         """
+        # pylint: disable= R0201, W0613
         # Update values from front panel
 
         return {}

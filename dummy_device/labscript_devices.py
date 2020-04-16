@@ -1,6 +1,6 @@
-"""The module to access the YunTemp within the shots.
+"""The module to access the DummyDevice within the shots.
 
-The YunTemp exposes the properties of temperature control.
+The DummyDevice exposes some basic features of a device.
 """
 
 from labscript import Device
