@@ -12,8 +12,6 @@ from user_devices.DummyIntermediateDevices.labscript_devices import (
     DummyIntermediateDevice,
 )
 
-# from user_devices.DummyIntermediateDevice import DummyIntermediateDevice
-
 DummyPseudoclock("dummy_pseudoclock")
 ClockLine(
     name="dummy_clockline",
