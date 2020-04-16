@@ -18,9 +18,6 @@ class DummyDeviceWorker(Worker):
 
     shot_file = None
     timeout = 10
-    setpoint = 0
-    gain = 1
-    integral = 0
 
     def init(self):
         """Initialize the Worker.
@@ -95,67 +92,6 @@ class DummyDeviceWorker(Worker):
         self.shot_file = None
         return True  # Indicates success
 
-    def set_value(self, set_str):
-        """A wrapper, which sends the string to the Arduino.
-
-        Args:
-            set_str: the string to be sent through http
-
-        Returns:
-            success of the communication.
-        """
-        try:
-            addr = self.target + set_str
-            proxies = {
-                "http": None,
-                "https": None,
-            }
-            req = requests.get(
-                addr,
-                auth=(self.usern, self.passw),
-                timeout=self.timeout,
-                proxies=proxies,
-            )
-            return req.ok
-        except ConnectionError:
-            return False
-
-    def set_setpoint(self):
-        """Set the setpoint.
-
-        Returns:
-            success of the communication.
-        """
-        set_str = "arduino/write/setpoint/" + str(self.setpoint) + "/"
-        self.set_value(set_str)
-
-    def set_gain(self):
-        """Set the proportional.
-
-        Returns:
-            success of the communication.
-        """
-        set_str = "arduino/write/gain/" + str(self.gain) + "/"
-        self.set_value(set_str)
-
-    def set_integral(self):
-        """Set the integral.
-
-        Returns:
-            success of the communication.
-        """
-        set_str = "arduino/write/integral/" + str(self.integral) + "/"
-        self.set_value(set_str)
-
-    def set_differential(self):
-        """Set the differential.
-
-        Returns:
-            success of the communication.
-        """
-        set_str = "arduino/write/differential/" + str(self.diff) + "/"
-        self.set_value(set_str)
-
     def program_manual(self, front_panel_values):
         """Performans manual updates from BLACS front panel.
 
@@ -166,13 +102,5 @@ class DummyDeviceWorker(Worker):
             dict: Which are the values the Arduino gives us back after we programmed it.
         """
         # Update values from front panel
-        self.setpoint = front_panel_values["setpoint"]
-        self.gain = front_panel_values["P"]
-        self.integral = front_panel_values["I"]
 
-        # Program Device to front panel values
-        self.set_setpoint()
-        self.set_gain()
-        self.set_integral()
-
-        return front_panel_values
+        return {}
