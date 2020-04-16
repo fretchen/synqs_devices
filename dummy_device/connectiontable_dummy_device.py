@@ -11,4 +11,5 @@ from user_devices.dummy_device.labscript_devices import DummyDevice
 DummyDevice(name="dummy_device_0")
 
 start()
+dummy_device_0.update_value(9)
 stop(1)

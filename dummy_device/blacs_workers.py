@@ -166,13 +166,5 @@ class DummyDeviceWorker(Worker):
             dict: Which are the values the Arduino gives us back after we programmed it.
         """
         # Update values from front panel
-        self.setpoint = front_panel_values["setpoint"]
-        self.gain = front_panel_values["P"]
-        self.integral = front_panel_values["I"]
 
-        # Program Device to front panel values
-        self.set_setpoint()
-        self.set_gain()
-        self.set_integral()
-
-        return front_panel_values
+        return {}
