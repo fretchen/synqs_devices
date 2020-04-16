@@ -4,7 +4,12 @@ The YunTemp exposes the properties of temperature control.
 """
 
 from labscript import Device
-from labscript_devices import labscript_device, BLACS_tab, BLACS_worker, runviewer_parser
+from labscript_devices import (
+    labscript_device,
+    BLACS_tab,
+    BLACS_worker,
+    runviewer_parser,
+)
 from labscript import IntermediateDevice, DigitalOut, AnalogOut, config
 import numpy as np
 from labscript_devices.NI_DAQmx.utils import split_conn_DO, split_conn_AO
@@ -13,13 +18,15 @@ from labscript_utils import dedent
 
 class DummyIntermediateDevice(IntermediateDevice):
 
-    description = 'Dummy IntermediateDevice'
+    description = "Dummy IntermediateDevice"
     clock_limit = 1e6
 
     # If this is updated, then you need to update generate_code to support whatever types you add
     allowed_children = [DigitalOut, AnalogOut]
 
-    def __init__(self, name, parent_device, BLACS_connection='dummy_connection', **kwargs):
+    def __init__(
+        self, name, parent_device, BLACS_connection="dummy_connection", **kwargs
+    ):
         self.BLACS_connection = BLACS_connection
         IntermediateDevice.__init__(self, name, parent_device, **kwargs)
         self.value = 0
@@ -35,7 +42,7 @@ class DummyIntermediateDevice(IntermediateDevice):
     def add_device(self, device):
         """Error checking for adding a child device"""
         # Verify static/dynamic outputs compatible with configuration:
-        #assert isinstance(device, AnalogOut) and isinstance(device, DigitalOut), "Device can only hande AnalogOut and DigitalOut"
+        # assert isinstance(device, AnalogOut) and isinstance(device, DigitalOut), "Device can only hande AnalogOut and DigitalOut"
         IntermediateDevice.add_device(self, device)
 
     def _make_analog_out_table(self, analogs, times):
@@ -80,5 +87,5 @@ class DummyIntermediateDevice(IntermediateDevice):
         print(times)
         AO_table = self._make_analog_out_table(analogs, times)
         print(AO_table)
-        #group.create_dataset('OUTPUTS', compression=config.compression, data=out_table)
-        group.create_dataset('AO', data=AO_table, compression=config.compression)
+        # group.create_dataset('OUTPUTS', compression=config.compression, data=out_table)
+        group.create_dataset("AO", data=AO_table, compression=config.compression)

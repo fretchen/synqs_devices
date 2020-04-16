@@ -14,23 +14,23 @@ class DummyIntermediateDeviceParser(object):
         self.device = device
 
     def get_traces(self, add_trace, clock=None):
-        with h5py.File(self.path, 'r') as f:
+        with h5py.File(self.path, "r") as f:
 
-            group = f['devices/' + self.name]
+            group = f["devices/" + self.name]
 
-            if 'AO' in group:
-                AO_table = group['AO'][:]
+            if "AO" in group:
+                AO_table = group["AO"][:]
             else:
                 AO_table = None
 
-            if 'DO' in f['devices/%s' % self.name]:
-                DO_table = group['DO'][:]
+            if "DO" in f["devices/%s" % self.name]:
+                DO_table = group["DO"][:]
             else:
                 DO_table = None
 
-            props = properties.get(f, self.name, 'connection_table_properties')
+            props = properties.get(f, self.name, "connection_table_properties")
 
-            version = props.get('__version__', None)
+            version = props.get("__version__", None)
             if version is None:
                 msg = """Shot was compiled with the old version of the NI_DAQmx device
                     class. The new runviewer parser is not backward compatible with old
@@ -38,9 +38,9 @@ class DummyIntermediateDeviceParser(object):
                     recompile the shot with labscript_devices 2.3.0 or greater."""
                 raise VersionException(dedent(msg))
 
-            ports = props['ports']
-            static_AO = props['static_AO']
-            static_DO = props['static_DO']
+            ports = props["ports"]
+            static_AO = props["static_AO"]
+            static_DO = props["static_DO"]
 
         times, clock_value = clock[0], clock[1]
 
@@ -62,7 +62,7 @@ class DummyIntermediateDeviceParser(object):
                     line_vals = (((1 << line) & DO_table[port_str]) != 0).astype(float)
                     if static_DO:
                         line_vals = np.full(len(clock_ticks), line_vals[0])
-                    traces['%s/line%d' % (port_str, line)] = (clock_ticks, line_vals)
+                    traces["%s/line%d" % (port_str, line)] = (clock_ticks, line_vals)
 
         if AO_table is not None:
             for chan in AO_table.dtype.names:
@@ -75,7 +75,7 @@ class DummyIntermediateDeviceParser(object):
         for channel_name, channel in self.device.child_list.items():
             if channel.parent_port in traces:
                 trace = traces[channel.parent_port]
-                if channel.device_class == 'Trigger':
+                if channel.device_class == "Trigger":
                     triggers[channel_name] = trace
                 add_trace(channel_name, trace, self.name, channel.parent_port)
 

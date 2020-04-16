@@ -15,7 +15,7 @@ class DummyIntermediateDeviceWorker(Worker):
     def transition_to_buffered(self, device_name, h5file, initial_values, fresh):
         return initial_values
 
-    def transition_to_manual(self,abort = False):
+    def transition_to_manual(self, abort=False):
         return True
 
     def abort_transition_to_buffered(self):
