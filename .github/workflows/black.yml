@@ -21,9 +21,9 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
-    
+
     # make sure that we format the repo with black
     - name: Black Code Formatter
       uses: lgeiger/black-action@v1.0.1
       with:
-        args: . --check
+        args: . --check --exclude AndorSolis
