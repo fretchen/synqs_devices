@@ -1,7 +1,21 @@
+"""The file that generates the GUI for the SynthHD.
+
+As it has no GUI this is just the barebones connection.
+
+"""
+
 from blacs.device_base_class import DeviceTab
 
 
 class SynthHDDeviceTab(DeviceTab):
+    """The class behind the GUI. It inherits from DeviceTab.
+
+
+    Attributes:
+        settings: Not sure here.
+        worker: Not sure here.
+    """
+
     def initialise_workers(self):
 
         # Look up the COM port and baud rate in the connection table:

@@ -1,3 +1,9 @@
+"""The module to access the SynthHD within the shots.
+
+The SynthHD exposes the SynthHD by windfreak to labscript.
+"""
+
+
 import numpy as np
 import h5py
 
@@ -12,6 +18,10 @@ class SynthHDDevice(Device):
     # connection table, so that BLACS can read them:
     @set_passed_properties({"connection_table_properties": ["com_port", "baud_rate"]})
     def __init__(self, name, com_port="COM1", baud_rate=115200, **kwargs):
+        """Initialize the device.
+
+        TODO: somehow baud_rate is never used.
+        """
         Device.__init__(self, name=name, parent_device=None, connection=None, **kwargs)
         self.start_commands = []
         # self.stop_commands = []
@@ -24,14 +34,6 @@ class SynthHDDevice(Device):
         if not isinstance(command, bytes):
             raise TypeError("command must be a bytestring")
         self.start_commands.append(command)
-
-    '''
-    def add_stop_command(self, command):
-        """Add a serial command that should be send at the end of the experiment"""
-        if not isinstance(command, bytes):
-            raise TypeError("command must be a bytestring")
-        self.stop_commands.append(command)
-    '''
 
     def generate_code(self, hdf5_file):
         # Convert the lists of commands into numpy arrays and save them to the shot file
